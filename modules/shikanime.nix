@@ -8,61 +8,43 @@ let
 
   gitConfig = pkgs.writeText "git-config-shikanime" ''
     [user]
-      name = ${cfg.name}
-      email = ${cfg.email}
+      name = ${config.sops.placeholder.shikanime-name}
+      email = ${config.sops.placeholder.shikanime-email}
     [commit]
       gpgsign = true
     [user]
-      signingkey = ${cfg.sshSigningKey or cfg.gpgKey or ""}
+      signingkey = ${config.sops.placeholder.shikanime-ssh-signing-key}
   '';
 
   jjConfig = pkgs.writeText "jj-config-shikanime.toml" ''
     [user]
-    name = "${cfg.name}"
-    email = "${cfg.email}"
+    name = "${config.sops.placeholder.shikanime-name}"
+    email = "${config.sops.placeholder.shikanime-email}"
 
     [signing]
-    backend = "${cfg.signingBackend}"
+    backend = "ssh"
     behavior = "own"
-    key = "${cfg.sshSigningKey or cfg.gpgKey or ""}
+    key = "${config.sops.placeholder.shikanime-ssh-signing-key}
   '';
 in
 {
   options.identities.shikanime = {
     enable = mkEnableOption "the shikanime identity";
-
-    name = mkOption {
-      type = types.str;
-      default = "Shikanime Deva";
-      description = "Git commit author name.";
-    };
-
-    email = mkOption {
-      type = types.str;
-      default = "william.phetsinorath@shikanime.studio";
-      description = "Git commit author email.";
-    };
-
-    gpgKey = mkOption {
-      type = types.nullOr types.str;
-      default = "09CA52A835C14157";
-      description = "GPG signing key ID.";
-    };
-
-    signingBackend = mkOption {
-      type = types.enum [ "gpg" "ssh" ];
-      default = "ssh";
-      description = "Commit signing backend.";
-    };
-
-    sshSigningKey = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = "SSH public key for commit signing.";
-    };
   };
 
   config = mkIf cfg.enable {
+    sops = {
+      age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+      defaultSopsFile = ./../secrets/identities.yaml;
+      defaultSopsFormat = "yaml";
+      secrets = {
+        shikanime-name = { };
+        shikanime-email = { };
+        shikanime-gpg-key = { };
+        shikanime-ssh-signing-key = { };
+      };
+    };
+
     xdg.configFile."git/config.d/shikanime".source = gitConfig;
     xdg.configFile."jj/conf.d/shikanime.toml".source = jjConfig;
   };
