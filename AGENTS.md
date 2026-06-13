@@ -1,19 +1,21 @@
 # Identities
 
-Nix flake modules for managing personas — git, GPG, SSH, and jj
-configuration. Each identity is a separate file under
-`modules/identities/`.
+Nix flake modules for managing personas — name, email, and GPG key.
+Each identity is a separate file under `modules/`.
 
 ## Identities
 
 - **shikanime** — Primary identity for Shikanime Studio work.
-  - Git: `Shikanime Deva <william.phetsinorath@shikanime.studio>`
+  - Name: `Shikanime Deva`
+  - Email: `william.phetsinorath@shikanime.studio`
   - GPG: `09CA52A835C14157`
 - **gouv** — Government identity.
-  - Git: `William Phetsinorath <william.phetsinorath-open@interieur.gouv.fr>`
+  - Name: `William Phetsinorath`
+  - Email: `william.phetsinorath-open@interieur.gouv.fr`
   - GPG: `0CC037FFEA0769A1`
 - **operator-6o** — YoRHa operator identity.
-  - Git: `Operator 6O <operator6o@shikanime.studio>`
+  - Name: `Operator 6O`
+  - Email: `operator6o@shikanime.studio`
   - GPG: `5F88DB0A4256C20F`
 
 ## Usage
@@ -36,35 +38,33 @@ configuration. Each identity is a separate file under
 
 ## Module Options
 
-Each identity (`shikanime`, `gouv`, `operator-6o`) supports:
+Each identity module (`shikanime`, `gouv`, `operator-6o`) exposes:
 
-| Option              | Type   | Description                        |
-| ------------------- | ------ | ---------------------------------- |
-| `enable`            | bool   | Activate this identity.            |
-| `gitUserName`       | str    | Git commit author name.            |
-| `gitUserEmail`      | str    | Git commit author email.           |
-| `gpgSigningKey`     | str    | GPG key ID for commit signing.     |
-| `sshHosts`          | attrs  | Per-host SSH configuration.        |
-| `gitExtraSettings`  | attrs  | Extra git config merged on top.    |
-| `jjExtraSettings`   | attrs  | Extra jj config merged on top.     |
-| `pushBookmarkPrefix`| str    | jj git_push_bookmark prefix.       |
+| Option   | Type   | Description                    |
+| -------- | ------ | ------------------------------ |
+| `enable` | bool   | Activate this identity.        |
+| `name`   | str    | Full name for this identity.   |
+| `email`  | str    | Email for this identity.       |
+| `gpgKey` | str\|null | GPG signing key ID.         |
+
+These options are consumed by the caller to configure `programs.git`, signing, etc.
 
 ## File Structure
 
-```
-modules/identities/
-├── base.nix           # Shared settings (git, jj, aliases)
+```text
+modules/
+├── base.nix           # Shared types
 ├── default.nix        # Aggregator — imports all identities
-├── shikanime.nix      # Primary identity
-├── gouv.nix           # Government identity
-└── operator-6o.nix    # YoRHa operator identity
+├── shikanime.nix      # Primary identity options
+├── gouv.nix           # Government identity options
+└── operator-6o.nix    # YoRHa operator identity options
 ```
 
 ## Coding Style
 
 - Nix files: 2-space indentation, `with lib;` at top.
-- Commit messages: plain-text capitalized title, no conventional-commit
-  prefix. Body with labels (`Design:`, `Related:`, `Closes #`).
+- Commit messages: plain-text capitalized title, no conventional-commit prefix.
+  Body with labels (`Design:`, `Related:`, `Closes #`).
 - Run `nix fmt` before shipping.
 
 ## Stack

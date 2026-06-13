@@ -1,5 +1,5 @@
 # Identities module — aggregates all identity submodules.
-{ config, lib, ... }:
+{ lib, ... }:
 
 {
   imports = [
@@ -10,7 +10,7 @@
 
   options.identities = lib.mkOption {
     type = lib.types.attrs;
-    default = {};
-    description = "Identity configuration (git, GPG, SSH, jj).";
+    default = { };
+    description = "Identity configuration.";
   };
 }

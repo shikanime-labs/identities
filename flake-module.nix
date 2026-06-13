@@ -1,19 +1,19 @@
 # Flake module for shikanime/identities
-{ self, lib, flake-parts-lib, ... }:
+{ lib, flake-parts-lib, ... }:
 
 with lib;
 
 let
   inherit (flake-parts-lib) importApply;
-  identitiesModule = importApply ./modules/identities/default.nix { };
+  identitiesModule = importApply ./modules/default.nix { };
 in
 {
   flake = {
     homeModules = {
       default = identitiesModule;
-      shikanime = importApply ./modules/identities/shikanime.nix { };
-      gouv = importApply ./modules/identities/gouv.nix { };
-      "operator-6o" = importApply ./modules/identities/operator-6o.nix { };
+      shikanime = importApply ./modules/shikanime.nix { };
+      gouv = importApply ./modules/gouv.nix { };
+      "operator-6o" = importApply ./modules/operator-6o.nix { };
     };
   };
 }
