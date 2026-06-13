@@ -1,8 +1,8 @@
 # Identities
 
 Nix flake modules for managing personas — git, GPG, SSH, and jj
-configuration. Each identity bundles a commit author, signing key, and
-host-specific SSH settings.
+configuration. Each identity is a separate file under
+`modules/identities/`.
 
 ## Identities
 
@@ -12,41 +12,22 @@ host-specific SSH settings.
 - **gouv** — Government identity.
   - Git: `William Phetsinorath <william.phetsinorath-open@interieur.gouv.fr>`
   - GPG: `0CC037FFEA0769A1`
-- **operator6o** — YoRHa operator identity.
+- **operator-6o** — YoRHa operator identity.
   - Git: `Operator 6O <operator6o@shikanime.studio>`
   - GPG: `5F88DB0A4256C20F`
 
 ## Usage
 
-Add to a consumer flake:
-
 ```nix
 {
   inputs.identities.url = "github:shikanime/identities";
 
-  outputs = { self, identities, ... }: {
-    # As a NixOS module:
-    nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
-      modules = [
-        identities.nixosModules.identities
-        {
-          identities.shikanime.enable = true;
-        }
-      ];
-    };
-
-    # As a home-manager module:
+  outputs = { self, identities, home-manager, ... }: {
     homeConfigurations.user = home-manager.lib.homeConfiguration {
       modules = [
-        identities.homeModules.identities
-        {
-          identities.shikanime = {
-            enable = true;
-            gitUserName = "Shikanime Deva";
-            gitUserEmail = "william.phetsinorath@shikanime.studio";
-            gpgSigningKey = "09CA52A835C14157";
-          };
-        }
+        identities.homeModules.shikanime
+        # or identities.homeModules.gouv
+        # or identities.homeModules.operator-6o
       ];
     };
   };
@@ -55,7 +36,7 @@ Add to a consumer flake:
 
 ## Module Options
 
-Each identity (`shikanime`, `gouv`, `operator6o`) supports:
+Each identity (`shikanime`, `gouv`, `operator-6o`) supports:
 
 | Option              | Type   | Description                        |
 | ------------------- | ------ | ---------------------------------- |
@@ -63,16 +44,25 @@ Each identity (`shikanime`, `gouv`, `operator6o`) supports:
 | `gitUserName`       | str    | Git commit author name.            |
 | `gitUserEmail`      | str    | Git commit author email.           |
 | `gpgSigningKey`     | str    | GPG key ID for commit signing.     |
-| `gpgKeyFingerprint` | str?   | Full fingerprint for key import.   |
 | `sshHosts`          | attrs  | Per-host SSH configuration.        |
 | `gitExtraSettings`  | attrs  | Extra git config merged on top.    |
 | `jjExtraSettings`   | attrs  | Extra jj config merged on top.     |
-| `pushBookmarkPrefix`| str?   | jj git_push_bookmark prefix.       |
+| `pushBookmarkPrefix`| str    | jj git_push_bookmark prefix.       |
+
+## File Structure
+
+```
+modules/identities/
+├── base.nix           # Shared settings (git, jj, aliases)
+├── default.nix        # Aggregator — imports all identities
+├── shikanime.nix      # Primary identity
+├── gouv.nix           # Government identity
+└── operator-6o.nix    # YoRHa operator identity
+```
 
 ## Coding Style
 
-- Nix files: 2-space indentation, `with lib;` at top, `mkEnableOption`
-  for toggles, `mkOption` with types for all inputs.
+- Nix files: 2-space indentation, `with lib;` at top.
 - Commit messages: plain-text capitalized title, no conventional-commit
   prefix. Body with labels (`Design:`, `Related:`, `Closes #`).
 - Run `nix fmt` before shipping.

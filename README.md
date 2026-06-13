@@ -1,16 +1,16 @@
 # shikanime/identities
 
-Nix flake modules for managing personas — git, GPG, SSH, and jj
-configuration. Each identity bundles a commit author, signing key, and
-host-specific SSH settings.
+Nix flake modules for managing personas — git, GPG, SSH, and jj configuration.
+Each identity bundles a commit author, signing key, and host-specific SSH
+settings.
 
 ## Identities
 
-| Identity     | Name                         | Email                                            | GPG Key           |
-| ------------ | ---------------------------- | ------------------------------------------------ | ----------------- |
-| `shikanime`  | Shikanime Deva               | `william.phetsinorath@shikanime.studio`          | `09CA52A835C14157` |
-| `gouv`       | William Phetsinorath         | `william.phetsinorath-open@interieur.gouv.fr`    | `0CC037FFEA0769A1` |
-| `operator6o` | Operator 6O                  | `operator6o@shikanime.studio`                    | `5F88DB0A4256C20F` |
+| Identity     | Name                 | Email                                         | GPG Key            |
+| ------------ | -------------------- | --------------------------------------------- | ------------------ |
+| `shikanime`  | Shikanime Deva       | `william.phetsinorath@shikanime.studio`       | `09CA52A835C14157` |
+| `gouv`       | William Phetsinorath | `william.phetsinorath-open@interieur.gouv.fr` | `0CC037FFEA0769A1` |
+| `operator6o` | Operator 6O          | `operator6o@shikanime.studio`                 | `5F88DB0A4256C20F` |
 
 ## Quick Start
 

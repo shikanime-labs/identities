@@ -1,0 +1,10 @@
+2026-06-13T18:13:36.016776Z DEBUG prek: 0.3.11
+2026-06-13T18:13:36.016821Z DEBUG Args: ["/nix/store/2zw3fhay0dwfh8hg1dz94ffq0kmdpsyy-prek-0.3.11/bin/prek", "install", "-c", ".pre-commit-config.yaml", "-t", "commit-msg"]
+2026-06-13T18:13:36.017014Z TRACE Executing `/etc/profiles/per-user/shikanimedeva/bin/git config --includes --null --get core.hooksPath`
+2026-06-13T18:13:36.022280Z TRACE Executing `/etc/profiles/per-user/shikanimedeva/bin/git config --get core.sharedRepository`
+2026-06-13T18:13:36.032198Z TRACE get_root: close time.busy=4.96ms time.idle=2.54µs
+2026-06-13T18:13:36.032236Z DEBUG Git root: /Users/shikanimedeva/Source/Repos/github.com/shikanime/identities
+2026-06-13T18:13:36.032244Z DEBUG Loading project configuration path=.pre-commit-config.yaml
+2026-06-13T18:13:36.032757Z TRACE Executing `/etc/profiles/per-user/shikanimedeva/bin/git rev-parse --git-path hooks`
+2026-06-13T18:13:36.037589Z TRACE Include selectors: ``
+2026-06-13T18:13:36.037599Z TRACE Skip selectors: ``
