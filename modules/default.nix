@@ -1,16 +1,8 @@
-# Identities module — aggregates all identity submodules.
-{ lib, ... }:
-
 {
   imports = [
+    ./identities.nix
     ./shikanime.nix
     ./gouv.nix
     ./operator-6o.nix
   ];
-
-  options.identities = lib.mkOption {
-    type = lib.types.attrs;
-    default = { };
-    description = "Identity configuration.";
-  };
 }

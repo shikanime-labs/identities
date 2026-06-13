@@ -52,14 +52,20 @@
   };
 
   outputs =
-    inputs@{ devenv, devlib, flake-parts, git-hooks, treefmt-nix, self, ... }:
+    inputs@{
+      devenv,
+      devlib,
+      flake-parts,
+      git-hooks,
+      treefmt-nix,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         devenv.flakeModule
         devlib.flakeModule
         git-hooks.flakeModule
         treefmt-nix.flakeModule
-        ./flake-module.nix
       ];
 
       perSystem = _: {
@@ -76,5 +82,13 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
+
+      flake = {
+        homeModule = import ./modules/default.nix;
+        homeModules = {
+          default = import ./modules/default.nix;
+          identities = import ./modules/default.nix;
+        };
+      };
     };
 }
