@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     sops = {
       age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
-      defaultSopsFile = ./../secrets/identities.yaml;
+      defaultSopsFile = ./../secrets/shikanime.enc.yaml;
       defaultSopsFormat = "yaml";
       secrets = {
         shikanime-name = { };
