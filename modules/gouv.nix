@@ -6,15 +6,7 @@ with lib;
 let
   cfg = config.identities.gouv;
 
-  gitConfig = pkgs.writeText "git-config-gouv" ''
-    [user]
-      name = ${config.sops.placeholder.gouv-name}
-      email = ${config.sops.placeholder.gouv-email}
-    [commit]
-      gpgsign = true
-    [user]
-      signingkey = ${config.sops.placeholder.gouv-gpg-key or ""}
-  '';
+  gitIni = pkgs.formats.gitIni { };
 in
 {
   options.identities.gouv = {
@@ -24,15 +16,33 @@ in
   config = mkIf cfg.enable {
     sops = {
       age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
-      defaultSopsFile = ./../secrets/identities.yaml;
+      defaultSopsFile = ./../secrets/gouv.enc.yaml;
       defaultSopsFormat = "yaml";
       secrets = {
         gouv-name = { };
         gouv-email = { };
         gouv-gpg-key = { };
       };
+
+      templates = {
+        gouv-git-config = {
+          file = gitIni.generate "config" {
+            gpg.format = "ssh";
+            user = {
+              name = config.sops.placeholder.gouv-name;
+              email = config.sops.placeholder.gouv-email;
+              signingkey = config.sops.placeholder.gouv-gpg-key;
+            };
+            commit.gpgsign = true;
+          };
+          mode = "0644";
+        };
+      };
     };
 
-    xdg.configFile."git/config.d/gouv".source = gitConfig;
+    xdg.configFile = {
+      "git/config.d/gouv".source =
+        config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-git-config.path;
+    };
   };
 }
