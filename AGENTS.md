@@ -1,16 +1,65 @@
 # Identities
 
-Identity information and personal/system configurations managed with Nix and
-Home Manager across multiple hosts. Centralizes user profiles, machine-specific
-settings, and SOPS-encrypted secrets.
+Nix flake modules for managing personas. Each identity provides name, email,
+and key material as options, then generates includable config fragments for
+git (`programs.git.includes`), Jujutsu (`jj/conf.d/`), and sapling.
 
-**Language:** Nix
+**The identity modules do NOT enable or configure the VCS tools themselves.**
+They only emit config fragments. The consumer is responsible for enabling
+`programs.git`, `programs.jujutsu`, etc.
 
-## Structure
+## Identities
 
-- `flake.nix` — Flake exposing host configurations and shared modules
-- `hosts/` — Per-host identity and system configuration
-- `secrets/` — SOPS-encrypted secrets (never commit plaintext)
+- **shikanime** — Primary identity for Shikanime Studio work.
+  - Config: `~/.config/jj/conf.d/shikanime.toml`, `~/.config/sapling/sapling.conf`
+  - Git includes: emitted via `identities.git.includes`
+- **gouv** — Government identity.
+  - Git includes: emitted via `identities.git.includes` (with `gitpath` condition)
+- **operator-6o** — YoRHa operator identity.
+  - Git includes: emitted via `identities.git.includes` (with `gitpath` condition)
+
+## Usage
+
+```nix
+{
+  inputs.identities.url = "github:x-shikanime/identities";
+
+  outputs = { self, identities, home-manager, ... }: {
+    homeConfigurations.user = home-manager.lib.homeConfiguration {
+      modules = [
+        identities.homeModules.default
+
+        # Consume the generated git includes
+        ({ config, ... }: {
+          programs.git.includes = config.identities.git.includes;
+        })
+      ];
+    };
+  };
+}
+```
+
+## Options Design
+
+Inspired by Catppuccin/nix:
+
+- `identities.enable` — global toggle for all identity modules
+- `identities.<name>.enable` — per-identity toggle
+- `identities.<name>.git.enable` / `.jj.enable` / `.sapling.enable` — per-tool output control
+- `identities.<name>.git.gitpath` — when set, scopes the git include to a path via `condition`
+- `identities.git.includes` — aggregated list of all git include entries from enabled identities
+
+## File Structure
+
+```text
+modules/
+├── base.nix           # Shared types
+├── default.nix        # Aggregator — imports all identities
+├── identities.nix     # Top-level options (global toggle, git/jj/sapling)
+├── shikanime.nix      # Primary identity (git + jj + sapling)
+├── gouv.nix           # Government identity (git only)
+└── operator-6o.nix    # YoRHa operator identity (git only)
+```
 
 ## Commit Style
 
@@ -38,12 +87,6 @@ settings, and SOPS-encrypted secrets.
 - Require linear history (no merge commits)
 - Require signed commits
 - Squash+rebase merge only
-
-## Secrets
-
-- All secrets managed via SOPS — decrypt with `sops` before editing, re-encrypt
-  after
-- Never commit plaintext secrets
 
 _Always use worktrees when making changes. Test with `nix flake check` before
 submitting._
