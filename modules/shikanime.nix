@@ -1,5 +1,10 @@
 # Shikanime identity — primary persona for Shikanime Studio work.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

@@ -1,5 +1,10 @@
 # Gouv identity — government persona.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

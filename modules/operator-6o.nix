@@ -1,5 +1,10 @@
 # Operator 6O identity — YoRHa operator persona.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
