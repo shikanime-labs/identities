@@ -94,7 +94,7 @@ in
             recursiveUpdate cfg.jj.extraConfig {
               signing = {
                 backend = "ssh";
-                behavior = mkDefault "own";
+                behavior = "own";
                 key = config.sops.placeholder.shikanime-ssh-signing-key;
               };
               user = {
