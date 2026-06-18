@@ -9,9 +9,6 @@ with lib;
 
 let
   cfg = config.identities.gouv;
-  includePath = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-git-config.path;
-  sshSigningKey = config.sops.placeholder.gouv-ssh-signing-key;
-
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -27,7 +24,7 @@ in
 
     git = {
       enable = mkEnableOption "git identity includes for gouv" // {
-        default = true;
+        default = config.programs.git.enable;
       };
 
       condition = mkOption {
@@ -50,7 +47,7 @@ in
 
     jj = {
       enable = mkEnableOption "Jujutsu identity config for gouv" // {
-        default = false;
+        default = config.programs.jujutsu.enable;
       };
 
       extraConfig = mkOption {
@@ -61,6 +58,10 @@ in
         '';
         type = types.attrs;
       };
+    };
+
+    sapling.enable = mkEnableOption "sapling identity config for gouv" // {
+      default = config.programs.sapling.enable;
     };
   };
 
@@ -81,13 +82,12 @@ in
               user = {
                 email = config.sops.placeholder.gouv-email;
                 name = config.sops.placeholder.gouv-name;
-                signingkey = sshSigningKey;
+                signingkey = config.sops.placeholder.gouv-ssh-signing-key;
               };
               commit.gpgsign = true;
               gpg.format = "ssh";
             }
           ]);
-          mode = "0644";
         };
 
         gouv-jj-config = {
@@ -97,7 +97,7 @@ in
               signing = {
                 backend = "ssh";
                 behavior = mkDefault "own";
-                key = sshSigningKey;
+                key = config.sops.placeholder.gouv-ssh-signing-key;
               };
               user = {
                 email = config.sops.placeholder.gouv-email;
@@ -105,7 +105,23 @@ in
               };
             }
           ]);
-          mode = "0644";
+        };
+
+        gouv-sapling-include = {
+          content = ''
+            [ui]
+            username = ${config.sops.placeholder.gouv-name} <${config.sops.placeholder.gouv-email}>
+
+            [commit]
+            gpgsign = true
+
+            %include ${
+              if pkgs.stdenv.isDarwin then
+                "${config.home.homeDirectory}/Library/Preferences/sapling/sapling.conf"
+              else
+                "${config.xdg.configHome}/sapling/sapling.conf"
+            }
+          '';
         };
       };
     };
@@ -113,7 +129,7 @@ in
     programs.git.includes = mkIf cfg.git.enable [
       (
         {
-          path = includePath;
+          path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-git-config.path;
         }
         // optionalAttrs (cfg.git.condition != null) { condition = cfg.git.condition; }
       )
@@ -121,6 +137,14 @@ in
 
     xdg.configFile."jj/conf.d/gouv.conf" = mkIf cfg.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-jj-config.path;
+    };
+
+    home.file."Library/Preferences/sapling/gouv.conf" = mkIf pkgs.stdenv.isDarwin {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-sapling-include.path;
+    };
+
+    xdg.configFile."sapling/gouv.conf" = mkIf (!pkgs.stdenv.isDarwin) {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-sapling-include.path;
     };
   };
 }

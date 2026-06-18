@@ -14,17 +14,18 @@ They only emit config fragments. The consumer is responsible for enabling
   - Sops secrets: `shikanime-name`, `shikanime-email`, `shikanime-gpg-key`,
     `shikanime-ssh-signing-key`
   - Sops file: `secrets/shikanime.enc.yaml`
-  - Output: git includes, `jj/conf.d/shikanime.toml`, `sapling/sapling.conf`
+  - Output: git includes, `jj/conf.d/shikanime.toml`, `sapling/shikanime.conf`
 - **gouv** — Government identity.
   - Sops secrets: `gouv-name`, `gouv-email`, `gouv-ssh-signing-key`
   - Sops file: `secrets/gouv.enc.yaml`
-  - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`
+  - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`,
+    `sapling/gouv.conf`
 - **operator-6o** — YoRHa operator identity.
   - Sops secrets: `operator6o-name`, `operator6o-email`,
     `operator6o-ssh-signing-key`
   - Sops file: `secrets/operator6o.enc.yaml`
   - Output: git includes (scoped via `git.condition`),
-    `jj/conf.d/operator6o.conf`
+    `jj/conf.d/operator6o.conf`, `sapling/operator6o.conf`
 
 ## Usage
 
@@ -80,8 +81,8 @@ modules/
 └── operator-6o.nix    # YoRHa operator identity (sops + git + jj)
 
 secrets/
-├── shikanime.enc.yaml # Sops-encrypted PII for shikanime
-├── gouv.enc.yaml      # Sops-encrypted PII for gouv
+├── shikanime.enc.yaml  # Sops-encrypted PII for shikanime
+├── gouv.enc.yaml       # Sops-encrypted PII for gouv
 └── operator6o.enc.yaml # Sops-encrypted PII for operator-6o
 ```
 

@@ -9,20 +9,8 @@ with lib;
 
 let
   cfg = config.identities.shikanime;
-  includePath = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-git-config.path;
-  sshSigningKey = config.sops.placeholder.shikanime-ssh-signing-key;
-
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
-  fixedGitConfig = {
-    user = {
-      email = config.sops.placeholder.shikanime-email;
-      name = config.sops.placeholder.shikanime-name;
-      signingkey = sshSigningKey;
-    };
-    commit.gpgsign = true;
-    gpg.format = "ssh";
-  };
 in
 {
   imports = [
@@ -36,7 +24,7 @@ in
 
     git = {
       enable = mkEnableOption "git identity includes for shikanime" // {
-        default = true;
+        default = config.programs.git.enable;
       };
 
       condition = mkOption {
@@ -59,7 +47,7 @@ in
 
     jj = {
       enable = mkEnableOption "Jujutsu identity config for shikanime" // {
-        default = true;
+        default = config.programs.jujutsu.enable;
       };
 
       extraConfig = mkOption {
@@ -72,10 +60,8 @@ in
       };
     };
 
-    sapling = {
-      enable = mkEnableOption "sapling identity config for shikanime" // {
-        default = true;
-      };
+    sapling.enable = mkEnableOption "sapling identity config for shikanime" // {
+      default = config.programs.sapling.enable;
     };
   };
 
@@ -93,9 +79,16 @@ in
         shikanime-git-config = {
           file = gitIni.generate "config" (mkMerge [
             cfg.git.extraConfig
-            fixedGitConfig
+            {
+              user = {
+                email = config.sops.placeholder.shikanime-email;
+                name = config.sops.placeholder.shikanime-name;
+                signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
+              };
+              commit.gpgsign = true;
+              gpg.format = "ssh";
+            }
           ]);
-          mode = "0644";
         };
 
         shikanime-jj-config = {
@@ -105,7 +98,7 @@ in
               signing = {
                 backend = "ssh";
                 behavior = mkDefault "own";
-                key = sshSigningKey;
+                key = config.sops.placeholder.shikanime-ssh-signing-key;
               };
               user = {
                 email = config.sops.placeholder.shikanime-email;
@@ -113,15 +106,26 @@ in
               };
             }
           ]);
-          mode = "0644";
         };
 
-        shikanime-sapling-config = {
-          file = (pkgs.formats.ini { }).generate "sapling.conf" {
-            ui.username = "${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>";
-            gpg.key = config.sops.placeholder.shikanime-gpg-key;
-          };
-          mode = "0644";
+        shikanime-sapling-include = {
+          content = ''
+            [commit]
+            gpgsign = true
+
+            [gpg]
+            key = ${config.sops.placeholder.shikanime-gpg-key}
+
+            [ui]
+            username = ${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>
+
+            %include ${
+              if pkgs.stdenv.isDarwin then
+                "${config.home.homeDirectory}/Library/Preferences/sapling/sapling.conf"
+              else
+                "${config.xdg.configHome}/sapling/sapling.conf"
+            }
+          '';
         };
       };
     };
@@ -129,7 +133,7 @@ in
     programs.git.includes = mkIf cfg.git.enable [
       (
         {
-          path = includePath;
+          path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-git-config.path;
         }
         // optionalAttrs (cfg.git.condition != null) { condition = cfg.git.condition; }
       )
@@ -139,13 +143,12 @@ in
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-jj-config.path;
     };
 
-    home.file = mkIf pkgs.stdenv.isDarwin {
-      "Library/Preferences/sapling/sapling.conf".source =
-        config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-sapling-config.path;
+    home.file."Library/Preferences/sapling/shikanime.conf" = mkIf pkgs.stdenv.isDarwin {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-sapling-include.path;
     };
 
-    xdg.configFile."sapling/sapling.conf" = mkIf (!pkgs.stdenv.isDarwin) {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-sapling-config.path;
+    xdg.configFile."sapling/shikanime.conf" = mkIf (!pkgs.stdenv.isDarwin) {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-sapling-include.path;
     };
   };
 }

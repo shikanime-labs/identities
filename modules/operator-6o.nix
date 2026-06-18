@@ -9,9 +9,6 @@ with lib;
 
 let
   cfg = config.identities.operator-6o;
-  includePath = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-git-config.path;
-  sshSigningKey = config.sops.placeholder.operator6o-ssh-signing-key;
-
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -27,7 +24,7 @@ in
 
     git = {
       enable = mkEnableOption "git identity includes for operator-6o" // {
-        default = true;
+        default = config.programs.git.enable;
       };
 
       condition = mkOption {
@@ -50,7 +47,7 @@ in
 
     jj = {
       enable = mkEnableOption "Jujutsu identity config for operator-6o" // {
-        default = false;
+        default = config.programs.jujutsu.enable;
       };
 
       extraConfig = mkOption {
@@ -61,6 +58,10 @@ in
         '';
         type = types.attrs;
       };
+    };
+
+    sapling.enable = mkEnableOption "sapling identity config for operator-6o" // {
+      default = config.programs.sapling.enable;
     };
   };
 
@@ -81,13 +82,12 @@ in
               user = {
                 email = config.sops.placeholder.operator6o-email;
                 name = config.sops.placeholder.operator6o-name;
-                signingkey = sshSigningKey;
+                signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
               };
               commit.gpgsign = true;
               gpg.format = "ssh";
             }
           ]);
-          mode = "0644";
         };
 
         operator6o-jj-config = {
@@ -97,7 +97,7 @@ in
               signing = {
                 backend = "ssh";
                 behavior = mkDefault "own";
-                key = sshSigningKey;
+                key = config.sops.placeholder.operator6o-ssh-signing-key;
               };
               user = {
                 email = config.sops.placeholder.operator6o-email;
@@ -105,7 +105,23 @@ in
               };
             }
           ]);
-          mode = "0644";
+        };
+
+        operator6o-sapling-include = {
+          content = ''
+            [ui]
+            username = ${config.sops.placeholder.operator6o-name} <${config.sops.placeholder.operator6o-email}>
+
+            [commit]
+            gpgsign = true
+
+            %include ${
+              if pkgs.stdenv.isDarwin then
+                "${config.home.homeDirectory}/Library/Preferences/sapling/sapling.conf"
+              else
+                "${config.xdg.configHome}/sapling/sapling.conf"
+            }
+          '';
         };
       };
     };
@@ -113,7 +129,7 @@ in
     programs.git.includes = mkIf cfg.git.enable [
       (
         {
-          path = includePath;
+          path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-git-config.path;
         }
         // optionalAttrs (cfg.git.condition != null) { condition = cfg.git.condition; }
       )
@@ -121,6 +137,14 @@ in
 
     xdg.configFile."jj/conf.d/operator6o.conf" = mkIf cfg.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
+    };
+
+    home.file."Library/Preferences/sapling/operator6o.conf" = mkIf pkgs.stdenv.isDarwin {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-include.path;
+    };
+
+    xdg.configFile."sapling/operator6o.conf" = mkIf (!pkgs.stdenv.isDarwin) {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-include.path;
     };
   };
 }
