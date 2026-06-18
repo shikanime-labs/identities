@@ -73,7 +73,6 @@ Inspired by Catppuccin/nix:
 
 ```text
 modules/
-├── base.nix           # Shared types
 ├── default.nix        # Aggregator — imports all identities
 ├── identities.nix     # Top-level options (global toggle, git/jj/sapling)
 ├── shikanime.nix      # Primary identity (sops + git + jj + sapling)
