@@ -20,14 +20,6 @@ pulling in a full tool configuration.
 - `sapling` config fragments with the right user and signing data
 - SOPS-backed secrets for names, emails, and signing keys
 
-## Identities
-
-| Identity     | Name                 | Email                                         | Signing |
-| ------------ | -------------------- | --------------------------------------------- | ------- |
-| `shikanime`  | Shikanime Deva       | `william.phetsinorath@shikanime.studio`       | SSH     |
-| `gouv`       | William Phetsinorath | `william.phetsinorath-open@interieur.gouv.fr` | SSH     |
-| `operator6o` | Operator 6O          | `operator6o@shikanime.studio`                 | SSH     |
-
 ## Quick Start
 
 Import the shared module once, then enable the identities you want:
