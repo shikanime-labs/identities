@@ -113,7 +113,7 @@
         homeModule = ./modules/default.nix;
         homeModules = {
           default = ./modules/default.nix;
-          identities = ./modules/shikanime.nix;
+          identities = ./modules/default.nix;
         };
       };
     };
