@@ -65,6 +65,8 @@ Inspired by Catppuccin/nix:
 - `identities.<name>.jj.extraConfig` — forwarded Jujutsu config merged into the
   generated include; signing fields are fixed by the module. Use
   `--when.repositories` there to scope it to repositories
+- `identities.<name>.sapling.extraConfig` — forwarded Sapling config merged into
+  the generated config; username and signing fields are fixed by the module
 - `identities.homeModules.default` — option-driven home-manager module that
   exposes `identities.shikanime.enable`, `identities.gouv.enable`, and
   `identities."operator-6o".enable`

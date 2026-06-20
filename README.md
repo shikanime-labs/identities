@@ -75,6 +75,8 @@ The design is intentionally small:
 - `identities.<name>.git.extraConfig` merges into the generated Git include
 - `identities.<name>.git.condition` sets the Git include condition
 - `identities.<name>.jj.extraConfig` merges into the generated JJ config
+- `identities.<name>.sapling.extraConfig` merges into the generated Sapling
+  config
 
 SSH signing is fixed in the modules. `extraConfig` is only for the remaining
 tool settings.
