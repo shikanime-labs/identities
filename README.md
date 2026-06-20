@@ -75,6 +75,8 @@ The design is intentionally small:
 - `identities.<name>.git.extraConfig` merges into the generated Git include
 - `identities.<name>.git.condition` sets the Git include condition
 - `identities.<name>.jj.extraConfig` merges into the generated JJ config
+- `identities.<name>.sapling.extraConfig` merges into the generated Sapling
+  config
 
 SSH signing is fixed in the modules. `extraConfig` is only for the remaining
 tool settings.
@@ -83,13 +85,13 @@ tool settings.
 
 - `shikanime`
   - `jj/conf.d/shikanime.toml`
-  - `sapling/shikanime.conf`
+  - `sapling/shikanime/sapling.conf`
 - `gouv`
   - `jj/conf.d/gouv.toml`
-  - `sapling/gouv.conf`
+  - `sapling/gouv/sapling.conf`
 - `operator-6o`
   - `jj/conf.d/operator6o.toml`
-  - `sapling/operator6o.conf`
+  - `sapling/operator6o/sapling.conf`
 
 Git identity snippets are written through `programs.git.includes`.
 

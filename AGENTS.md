@@ -14,18 +14,19 @@ They only emit config fragments. The consumer is responsible for enabling
   - Sops secrets: `shikanime-name`, `shikanime-email`, `shikanime-gpg-key`,
     `shikanime-ssh-signing-key`
   - Sops file: `secrets/shikanime.enc.yaml`
-  - Output: git includes, `jj/conf.d/shikanime.toml`, `sapling/shikanime.conf`
+  - Output: git includes, `jj/conf.d/shikanime.toml`,
+    `sapling/shikanime/sapling.conf`
 - **gouv** — Government identity.
   - Sops secrets: `gouv-name`, `gouv-email`, `gouv-ssh-signing-key`
   - Sops file: `secrets/gouv.enc.yaml`
   - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`,
-    `sapling/gouv.conf`
+    `sapling/gouv/sapling.conf`
 - **operator-6o** — YoRHa operator identity.
   - Sops secrets: `operator6o-name`, `operator6o-email`,
     `operator6o-ssh-signing-key`
   - Sops file: `secrets/operator6o.enc.yaml`
   - Output: git includes (scoped via `git.condition`),
-    `jj/conf.d/operator6o.conf`, `sapling/operator6o.conf`
+    `jj/conf.d/operator6o.conf`, `sapling/operator6o/sapling.conf`
 
 ## Usage
 
@@ -65,6 +66,8 @@ Inspired by Catppuccin/nix:
 - `identities.<name>.jj.extraConfig` — forwarded Jujutsu config merged into the
   generated include; signing fields are fixed by the module. Use
   `--when.repositories` there to scope it to repositories
+- `identities.<name>.sapling.extraConfig` — forwarded Sapling config merged into
+  the generated config; username and signing fields are fixed by the module
 - `identities.homeModules.default` — option-driven home-manager module that
   exposes `identities.shikanime.enable`, `identities.gouv.enable`, and
   `identities."operator-6o".enable`

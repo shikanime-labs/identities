@@ -9,6 +9,7 @@ with lib;
 
 let
   cfg = config.identities.gouv;
+  ini = pkgs.formats.ini { };
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -60,8 +61,20 @@ in
       };
     };
 
-    sapling.enable = mkEnableOption "sapling identity config for gouv" // {
-      default = config.identities.sapling.enable;
+    sapling = {
+      enable = mkEnableOption "sapling identity config for gouv" // {
+        default = config.identities.sapling.enable;
+      };
+
+      extraConfig = mkOption {
+        default = { };
+        description = ''
+          Extra Sapling config merged into the generated identity config.
+          Identity-specific username and signing settings are fixed by the module
+          and cannot be overridden.
+        '';
+        type = types.attrs;
+      };
     };
   };
 
@@ -105,25 +118,13 @@ in
           );
         };
 
-        gouv-sapling-include = {
-          content = ''
-            [commit]
-            gpgsign = true
-
-            [gpg]
-            key = ${config.sops.placeholder.gouv-gpg-key}
-
-            [ui]
-            username = ${config.sops.placeholder.gouv-name} <${config.sops.placeholder.gouv-email}>
-
-            %include ${
-              if pkgs.stdenv.isDarwin then
-                "${config.home.homeDirectory}/Library/Preferences/sapling/sapling.conf"
-              else
-                "${config.xdg.configHome}/sapling/sapling.conf"
-            }
-          '';
-        };
+        gouv-sapling-config.file = ini.generate "sapling.conf" (
+          recursiveUpdate cfg.sapling.extraConfig {
+            commit.gpgsign = true;
+            gpg.key = config.sops.placeholder.gouv-gpg-key;
+            ui.username = "${config.sops.placeholder.gouv-name} <${config.sops.placeholder.gouv-email}>";
+          }
+        );
       };
     };
 
@@ -140,12 +141,12 @@ in
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-jj-config.path;
     };
 
-    home.file."Library/Preferences/sapling/gouv.conf" = mkIf pkgs.stdenv.isDarwin {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-sapling-include.path;
+    home.file."Library/Preferences/sapling/gouv/sapling.conf" = mkIf pkgs.stdenv.isDarwin {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-sapling-config.path;
     };
 
-    xdg.configFile."sapling/gouv.conf" = mkIf (!pkgs.stdenv.isDarwin) {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-sapling-include.path;
+    xdg.configFile."sapling/gouv/sapling.conf" = mkIf (!pkgs.stdenv.isDarwin) {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-sapling-config.path;
     };
   };
 }

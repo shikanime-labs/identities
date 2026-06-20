@@ -9,6 +9,7 @@ with lib;
 
 let
   cfg = config.identities.operator-6o;
+  ini = pkgs.formats.ini { };
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -60,8 +61,20 @@ in
       };
     };
 
-    sapling.enable = mkEnableOption "sapling identity config for operator-6o" // {
-      default = config.identities.sapling.enable;
+    sapling = {
+      enable = mkEnableOption "sapling identity config for operator-6o" // {
+        default = config.identities.sapling.enable;
+      };
+
+      extraConfig = mkOption {
+        default = { };
+        description = ''
+          Extra Sapling config merged into the generated identity config.
+          Identity-specific username and signing settings are fixed by the module
+          and cannot be overridden.
+        '';
+        type = types.attrs;
+      };
     };
   };
 
@@ -105,25 +118,13 @@ in
           );
         };
 
-        operator6o-sapling-include = {
-          content = ''
-            [commit]
-            gpgsign = true
-
-            [gpg]
-            key = ${config.sops.placeholder.operator6o-gpg-key}
-
-            [ui]
-            username = ${config.sops.placeholder.operator6o-name} <${config.sops.placeholder.operator6o-email}>
-
-            %include ${
-              if pkgs.stdenv.isDarwin then
-                "${config.home.homeDirectory}/Library/Preferences/sapling/sapling.conf"
-              else
-                "${config.xdg.configHome}/sapling/sapling.conf"
-            }
-          '';
-        };
+        operator6o-sapling-config.file = ini.generate "sapling.conf" (
+          recursiveUpdate cfg.sapling.extraConfig {
+            commit.gpgsign = true;
+            gpg.key = config.sops.placeholder.operator6o-gpg-key;
+            ui.username = "${config.sops.placeholder.operator6o-name} <${config.sops.placeholder.operator6o-email}>";
+          }
+        );
       };
     };
 
@@ -140,12 +141,12 @@ in
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
     };
 
-    home.file."Library/Preferences/sapling/operator6o.conf" = mkIf pkgs.stdenv.isDarwin {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-include.path;
+    home.file."Library/Preferences/sapling/operator6o/sapling.conf" = mkIf pkgs.stdenv.isDarwin {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-config.path;
     };
 
-    xdg.configFile."sapling/operator6o.conf" = mkIf (!pkgs.stdenv.isDarwin) {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-include.path;
+    xdg.configFile."sapling/operator6o/sapling.conf" = mkIf (!pkgs.stdenv.isDarwin) {
+      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-config.path;
     };
   };
 }
