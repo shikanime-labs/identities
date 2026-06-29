@@ -120,6 +120,10 @@ in
 
         gouv-sapling-config.file = ini.generate "sapling.conf" (
           recursiveUpdate cfg.sapling.extraConfig {
+            alias = {
+              ci = "ci --message-field Signed-off-by=\"${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>\"";
+              commit = "commit --message-field Signed-off-by=\"${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>\"";
+            };
             commit.gpgsign = true;
             gpg.key = config.sops.placeholder.gouv-gpg-key;
             ui.username = "${config.sops.placeholder.gouv-name} <${config.sops.placeholder.gouv-email}>";
