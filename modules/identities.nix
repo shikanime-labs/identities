@@ -6,24 +6,59 @@ with lib;
   options.identities = {
     enable = mkEnableOption "all identity modules";
 
-    git.enable = mkEnableOption "git identity includes for all enabled identities" // {
-      default = config.programs.git.enable;
+    git = {
+      enable = mkEnableOption "git identity includes for all enabled identities" // {
+        default = config.programs.git.enable;
+      };
+      extraConfig = mkOption {
+        type = types.attrs;
+        default = config.programs.git.extraConfig;
+        description = "Extra configuration options for git identity";
+      };
     };
 
-    jj.enable = mkEnableOption "Jujutsu identity configs for all enabled identities" // {
-      default = config.programs.jujutsu.enable;
+    jj = {
+      enable = mkEnableOption "Jujutsu identity configs for all enabled identities" // {
+        default = config.programs.jujutsu.enable;
+      };
+      extraConfig = mkOption {
+        type = types.attrs;
+        default = config.programs.jujutsu.extraConfig;
+        description = "Extra configuration options for Jujutsu identity";
+      };
     };
 
-    sapling.enable = mkEnableOption "sapling identity config for all enabled identities" // {
-      default = config.programs.sapling.enable;
+    sapling = {
+      enable = mkEnableOption "sapling identity config for all enabled identities" // {
+        default = config.programs.sapling.enable;
+      };
+      extraConfig = mkOption {
+        type = types.attrs;
+        default = config.programs.sapling.extraConfig;
+        description = "Extra configuration options for sapling identity";
+      };
     };
 
-    ghstack.enable = mkEnableOption "ghstack config for all enabled identities" // {
-      default = false;
+    ghstack = {
+      enable = mkEnableOption "ghstack config for all enabled identities" // {
+        default = false;
+      };
+      extraConfig = mkOption {
+        type = types.attrs;
+        default = config.programs.ghstack.extraConfig;
+        description = "Extra configuration options for ghstack identity";
+      };
     };
 
-    glab.enable = mkEnableOption "glab config for all enabled identities" // {
-      default = false;
+    glab = {
+      enable = mkEnableOption "glab config for all enabled identities" // {
+        default = false;
+      };
+      extraConfig = mkOption {
+        type = types.attrs;
+        default = config.programs.glab.extraConfig;
+        description = "Extra configuration options for glab identity";
+      };
     };
   };
 }

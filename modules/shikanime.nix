@@ -38,7 +38,7 @@ in
       };
 
       extraConfig = mkOption {
-        default = { };
+        default = config.identities.git.extraConfig;
         description = ''
           Extra git config merged into the generated identity include.
           Signing settings are fixed by this module and cannot be overridden.
@@ -53,7 +53,7 @@ in
       };
 
       extraConfig = mkOption {
-        default = { };
+        default = config.identities.jj.extraConfig;
         description = ''
           Extra Jujutsu config merged into the generated identity include.
           Signing settings are fixed by this module and cannot be overridden.
@@ -68,7 +68,7 @@ in
       };
 
       extraConfig = mkOption {
-        default = { };
+        default = config.identities.sapling.extraConfig;
         description = ''
           Extra Sapling config merged into the generated identity config.
           Identity-specific username and signing settings are fixed by the module
@@ -84,7 +84,7 @@ in
       };
 
       extraConfig = mkOption {
-        default = { };
+        default = config.identities.ghstack.extraConfig;
         description = ''
           Extra ghstack config merged into the generated config.
           The GitHub identity fields are fixed by the module and cannot be
@@ -100,7 +100,7 @@ in
       };
 
       extraConfig = mkOption {
-        default = { };
+        default = config.identities.glab.extraConfig;
         description = ''
           Extra glab config merged into the generated config.
           The GitLab host and token fields are fixed by the module and cannot be
