@@ -45,7 +45,7 @@ with lib;
       };
       extraConfig = mkOption {
         type = types.attrs;
-        default = config.programs.ghstack.extraConfig;
+        default = { };
         description = "Extra configuration options for ghstack identity";
       };
     };
@@ -56,7 +56,7 @@ with lib;
       };
       extraConfig = mkOption {
         type = types.attrs;
-        default = config.programs.glab.extraConfig;
+        default = { };
         description = "Extra configuration options for glab identity";
       };
     };
