@@ -62,22 +62,6 @@ in
       };
     };
 
-    sapling = {
-      enable = mkEnableOption "sapling identity config for shikanime" // {
-        default = config.identities.sapling.enable;
-      };
-
-      extraConfig = mkOption {
-        default = config.identities.sapling.extraConfig;
-        description = ''
-          Extra Sapling config merged into the generated identity config.
-          Identity-specific username and signing settings are fixed by the module
-          and cannot be overridden.
-        '';
-        type = types.attrs;
-      };
-    };
-
     ghstack = {
       enable = mkEnableOption "ghstack config for shikanime" // {
         default = config.identities.ghstack.enable;
@@ -153,18 +137,6 @@ in
           );
         };
 
-        shikanime-sapling-config.file = ini.generate "sapling.conf" (
-          recursiveUpdate cfg.sapling.extraConfig {
-            alias = {
-              ci = "ci --message-field Signed-off-by=\"${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>\"";
-              commit = "commit --message-field Signed-off-by=\"${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>\"";
-            };
-            commit.gpgsign = true;
-            gpg.key = config.sops.placeholder.shikanime-gpg-key;
-            ui.username = "${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>";
-          }
-        );
-
         ghstack-config = mkIf cfg.ghstack.enable {
           file = ini.generate "ghstackrc" (
             recursiveUpdate cfg.ghstack.extraConfig {
@@ -204,14 +176,6 @@ in
 
     xdg.configFile."jj/conf.d/shikanime.toml" = mkIf cfg.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-jj-config.path;
-    };
-
-    home.file."Library/Preferences/sapling/shikanime/sapling.conf" = mkIf pkgs.stdenv.isDarwin {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-sapling-config.path;
-    };
-
-    xdg.configFile."sapling/shikanime/sapling.conf" = mkIf (!pkgs.stdenv.isDarwin) {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-sapling-config.path;
     };
 
     home.sessionVariables = mkIf cfg.ghstack.enable {
