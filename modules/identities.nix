@@ -28,17 +28,6 @@ with lib;
       };
     };
 
-    sapling = {
-      enable = mkEnableOption "sapling identity config for all enabled identities" // {
-        default = config.programs.sapling.enable;
-      };
-      extraConfig = mkOption {
-        type = types.attrs;
-        default = config.programs.sapling.extraConfig;
-        description = "Extra configuration options for sapling identity";
-      };
-    };
-
     ghstack = {
       enable = mkEnableOption "ghstack config for all enabled identities" // {
         default = false;

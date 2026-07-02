@@ -9,7 +9,6 @@ with lib;
 
 let
   cfg = config.identities.operator-6o;
-  ini = pkgs.formats.ini { };
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -60,22 +59,6 @@ in
         type = types.attrs;
       };
     };
-
-    sapling = {
-      enable = mkEnableOption "sapling identity config for operator-6o" // {
-        default = config.identities.sapling.enable;
-      };
-
-      extraConfig = mkOption {
-        default = config.identities.sapling.extraConfig;
-        description = ''
-          Extra Sapling config merged into the generated identity config.
-          Identity-specific username and signing settings are fixed by the module
-          and cannot be overridden.
-        '';
-        type = types.attrs;
-      };
-    };
   };
 
   config = mkIf cfg.enable {
@@ -117,18 +100,6 @@ in
             }
           );
         };
-
-        operator6o-sapling-config.file = ini.generate "sapling.conf" (
-          recursiveUpdate cfg.sapling.extraConfig {
-            alias = {
-              ci = "ci --message-field Signed-off-by=\"${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>\"";
-              commit = "commit --message-field Signed-off-by=\"${config.sops.placeholder.shikanime-name} <${config.sops.placeholder.shikanime-email}>\"";
-            };
-            commit.gpgsign = true;
-            gpg.key = config.sops.placeholder.operator6o-gpg-key;
-            ui.username = "${config.sops.placeholder.operator6o-name} <${config.sops.placeholder.operator6o-email}>";
-          }
-        );
       };
     };
 
@@ -143,14 +114,6 @@ in
 
     xdg.configFile."jj/conf.d/operator6o.toml" = mkIf cfg.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
-    };
-
-    home.file."Library/Preferences/sapling/operator6o/sapling.conf" = mkIf pkgs.stdenv.isDarwin {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-config.path;
-    };
-
-    xdg.configFile."sapling/operator6o/sapling.conf" = mkIf (!pkgs.stdenv.isDarwin) {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-sapling-config.path;
     };
   };
 }

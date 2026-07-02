@@ -14,19 +14,17 @@ They only emit config fragments. The consumer is responsible for enabling
   - Sops secrets: `shikanime-name`, `shikanime-email`, `shikanime-gpg-key`,
     `shikanime-ssh-signing-key`
   - Sops file: `secrets/shikanime.enc.yaml`
-  - Output: git includes, `jj/conf.d/shikanime.toml`,
-    `sapling/shikanime/sapling.conf`
+  - Output: git includes, `jj/conf.d/shikanime.toml`
 - **gouv** — Government identity.
   - Sops secrets: `gouv-name`, `gouv-email`, `gouv-ssh-signing-key`
   - Sops file: `secrets/gouv.enc.yaml`
-  - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`,
-    `sapling/gouv/sapling.conf`
+  - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`
 - **operator-6o** — YoRHa operator identity.
   - Sops secrets: `operator6o-name`, `operator6o-email`,
     `operator6o-ssh-signing-key`
   - Sops file: `secrets/operator6o.enc.yaml`
   - Output: git includes (scoped via `git.condition`),
-    `jj/conf.d/operator6o.conf`, `sapling/operator6o/sapling.conf`
+    `jj/conf.d/operator6o.conf`
 
 ## Usage
 
@@ -57,8 +55,7 @@ Inspired by Catppuccin/nix:
 
 - `identities.enable` — global toggle for all identity modules
 - `identities.<name>.enable` — per-identity toggle
-- `identities.<name>.git.enable` / `.jj.enable` / `.sapling.enable` — per-tool
-  output control
+- `identities.<name>.git.enable` / `.jj.enable` — per-tool output control
 - `identities.ghstack.enable` / `identities.glab.enable` — global toggles for
   `shikanime` ghstack and glab config
 - `identities.shikanime.ghstack.enable` / `.glab.enable` — per-tool output
@@ -70,8 +67,6 @@ Inspired by Catppuccin/nix:
 - `identities.<name>.jj.extraConfig` — forwarded Jujutsu config merged into the
   generated include; signing fields are fixed by the module. Use
   `--when.repositories` there to scope it to repositories
-- `identities.<name>.sapling.extraConfig` — forwarded Sapling config merged into
-  the generated config; username and signing fields are fixed by the module
 - `identities.shikanime.ghstack.extraConfig` — forwarded ghstack config merged
   into the generated config; GitHub identity fields are fixed by the module
 - `identities.shikanime.glab.extraConfig` — forwarded glab config merged into
@@ -85,8 +80,8 @@ Inspired by Catppuccin/nix:
 ```text
 modules/
 ├── default.nix        # Aggregator — imports all identities
-├── identities.nix     # Top-level options (global toggle, git/jj/sapling)
-├── shikanime.nix      # Primary identity (sops + git + jj + sapling)
+├── identities.nix     # Top-level options (global toggle, git/jj)
+├── shikanime.nix      # Primary identity (sops + git + jj)
 ├── gouv.nix           # Government identity (sops + git + jj)
 └── operator-6o.nix    # YoRHa operator identity (sops + git + jj)
 
