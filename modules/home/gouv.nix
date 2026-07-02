@@ -8,7 +8,7 @@
 with lib;
 
 let
-  cfg = config.identities.gouv;
+  cfg = config.identities;
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -61,7 +61,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && cfg.gouv.enable) {
     sops = {
       secrets = {
         gouv-email.sopsFile = ./../secrets/gouv.enc.yaml;
@@ -73,7 +73,7 @@ in
       templates = {
         gouv-git-config = {
           file = gitIni.generate "config" (
-            recursiveUpdate cfg.git.extraConfig {
+            recursiveUpdate cfg.gouv.git.extraConfig {
               user = {
                 email = config.sops.placeholder.gouv-email;
                 name = config.sops.placeholder.gouv-name;
@@ -87,7 +87,7 @@ in
 
         gouv-jj-config = {
           file = toml.generate "config.toml" (
-            recursiveUpdate cfg.jj.extraConfig {
+            recursiveUpdate cfg.gouv.jj.extraConfig {
               signing = {
                 backend = "ssh";
                 behavior = "own";
@@ -103,16 +103,16 @@ in
       };
     };
 
-    programs.git.includes = mkIf cfg.git.enable [
+    programs.git.includes = mkIf cfg.gouv.git.enable [
       (
         {
           path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-git-config.path;
         }
-        // optionalAttrs (cfg.git.condition != null) { condition = cfg.git.condition; }
+        // optionalAttrs (cfg.gouv.git.condition != null) { condition = cfg.gouv.git.condition; }
       )
     ];
 
-    xdg.configFile."jj/conf.d/gouv.toml" = mkIf cfg.jj.enable {
+    xdg.configFile."jj/conf.d/gouv.toml" = mkIf cfg.gouv.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-jj-config.path;
     };
   };

@@ -6,9 +6,13 @@ with lib;
   options.identities = {
     enable = mkEnableOption "all identity modules";
 
+    autoEnable = mkEnableOption "Automatically enable all identity modules" // {
+      default = true;
+    };
+
     git = {
       enable = mkEnableOption "git identity includes for all enabled identities" // {
-        default = config.programs.git.enable;
+        default = config.programs.git.enable && config.identities.autoEnable;
       };
       extraConfig = mkOption {
         type = types.attrs;
@@ -19,7 +23,7 @@ with lib;
 
     jj = {
       enable = mkEnableOption "Jujutsu identity configs for all enabled identities" // {
-        default = config.programs.jujutsu.enable;
+        default = config.programs.jujutsu.enable && config.identities.autoEnable;
       };
       extraConfig = mkOption {
         type = types.attrs;

@@ -8,7 +8,7 @@
 with lib;
 
 let
-  cfg = config.identities.shikanime;
+  cfg = config.identities;
   ini = pkgs.formats.ini { };
   gitIni = pkgs.formats.gitIni { };
   yaml = pkgs.formats.yaml { };
@@ -95,7 +95,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && cfg.shikanime.enable) {
     sops = {
       secrets = {
         shikanime-email.sopsFile = ./../secrets/shikanime.enc.yaml;
@@ -109,7 +109,7 @@ in
       templates = {
         shikanime-git-config = {
           file = gitIni.generate "config" (
-            recursiveUpdate cfg.git.extraConfig {
+            recursiveUpdate cfg.shikanime.git.extraConfig {
               user = {
                 email = config.sops.placeholder.shikanime-email;
                 name = config.sops.placeholder.shikanime-name;
@@ -123,7 +123,7 @@ in
 
         shikanime-jj-config = {
           file = toml.generate "config.toml" (
-            recursiveUpdate cfg.jj.extraConfig {
+            recursiveUpdate cfg.shikanime.jj.extraConfig {
               signing = {
                 backend = "ssh";
                 behavior = "own";
@@ -137,9 +137,9 @@ in
           );
         };
 
-        ghstack-config = mkIf cfg.ghstack.enable {
+        ghstack-config = mkIf cfg.shikanime.ghstack.enable {
           file = ini.generate "ghstackrc" (
-            recursiveUpdate cfg.ghstack.extraConfig {
+            recursiveUpdate cfg.shikanime.ghstack.extraConfig {
               ghstack = {
                 github_oauth = config.sops.placeholder.github-token;
                 github_url = "github.com";
@@ -150,9 +150,9 @@ in
           mode = "0640";
         };
 
-        glab-cli-config = mkIf cfg.glab.enable {
+        glab-cli-config = mkIf cfg.shikanime.glab.enable {
           file = yaml.generate "config.yaml" (
-            recursiveUpdate cfg.glab.extraConfig {
+            recursiveUpdate cfg.shikanime.glab.extraConfig {
               git_protocol = "https";
               hosts.gitlab.com = {
                 api_host = "gitlab.com";
@@ -165,24 +165,24 @@ in
       };
     };
 
-    programs.git.includes = mkIf cfg.git.enable [
+    programs.git.includes = mkIf cfg.shikanime.git.enable [
       (
         {
           path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-git-config.path;
         }
-        // optionalAttrs (cfg.git.condition != null) { condition = cfg.git.condition; }
+        // optionalAttrs (cfg.shikanime.git.condition != null) { condition = cfg.shikanime.git.condition; }
       )
     ];
 
-    xdg.configFile."jj/conf.d/shikanime.toml" = mkIf cfg.jj.enable {
+    xdg.configFile."jj/conf.d/shikanime.toml" = mkIf cfg.shikanime.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-jj-config.path;
     };
 
-    home.sessionVariables = mkIf cfg.ghstack.enable {
+    home.sessionVariables = mkIf cfg.shikanime.ghstack.enable {
       GHSTACKRC_PATH = config.lib.file.mkOutOfStoreSymlink config.sops.templates.ghstack-config.path;
     };
 
-    xdg.configFile."glab-cli/shikanime/config.yml" = mkIf cfg.glab.enable {
+    xdg.configFile."glab-cli/shikanime/config.yml" = mkIf cfg.shikanime.glab.enable {
       force = true;
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.glab-cli-config.path;
     };

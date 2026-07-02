@@ -8,7 +8,7 @@
 with lib;
 
 let
-  cfg = config.identities.operator-6o;
+  cfg = config.identities;
   gitIni = pkgs.formats.gitIni { };
   toml = pkgs.formats.toml { };
 in
@@ -61,7 +61,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && cfg.operator-6o.enable) {
     sops = {
       secrets = {
         operator6o-email.sopsFile = ./../secrets/operator6o.enc.yaml;
@@ -73,7 +73,7 @@ in
       templates = {
         operator6o-git-config = {
           file = gitIni.generate "config" (
-            recursiveUpdate cfg.git.extraConfig {
+            recursiveUpdate cfg.operator-6o.git.extraConfig {
               user = {
                 email = config.sops.placeholder.operator6o-email;
                 name = config.sops.placeholder.operator6o-name;
@@ -87,7 +87,7 @@ in
 
         operator6o-jj-config = {
           file = toml.generate "config.toml" (
-            recursiveUpdate cfg.jj.extraConfig {
+            recursiveUpdate cfg.operator-6o.jj.extraConfig {
               signing = {
                 backend = "ssh";
                 behavior = "own";
@@ -103,16 +103,18 @@ in
       };
     };
 
-    programs.git.includes = mkIf cfg.git.enable [
+    programs.git.includes = mkIf cfg.operator-6o.git.enable [
       (
         {
           path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-git-config.path;
         }
-        // optionalAttrs (cfg.git.condition != null) { condition = cfg.git.condition; }
+        // optionalAttrs (cfg.operator-6o.git.condition != null) {
+          condition = cfg.operator-6o.git.condition;
+        }
       )
     ];
 
-    xdg.configFile."jj/conf.d/operator6o.toml" = mkIf cfg.jj.enable {
+    xdg.configFile."jj/conf.d/operator6o.toml" = mkIf cfg.operator-6o.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
     };
   };
