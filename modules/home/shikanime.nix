@@ -98,12 +98,12 @@ in
   config = mkIf (cfg.enable && cfg.shikanime.enable) {
     sops = {
       secrets = {
-        shikanime-email.sopsFile = ./../secrets/shikanime.enc.yaml;
-        github-token.sopsFile = ./../secrets/shikanime.enc.yaml;
-        gitlab-token.sopsFile = ./../secrets/shikanime.enc.yaml;
-        shikanime-gpg-key.sopsFile = ./../secrets/shikanime.enc.yaml;
-        shikanime-name.sopsFile = ./../secrets/shikanime.enc.yaml;
-        shikanime-ssh-signing-key.sopsFile = ./../secrets/shikanime.enc.yaml;
+        shikanime-email.sopsFile = ./../../secrets/shikanime.enc.yaml;
+        github-token.sopsFile = ./../../secrets/shikanime.enc.yaml;
+        gitlab-token.sopsFile = ./../../secrets/shikanime.enc.yaml;
+        shikanime-gpg-key.sopsFile = ./../../secrets/shikanime.enc.yaml;
+        shikanime-name.sopsFile = ./../../secrets/shikanime.enc.yaml;
+        shikanime-ssh-signing-key.sopsFile = ./../../secrets/shikanime.enc.yaml;
       };
 
       templates = {
