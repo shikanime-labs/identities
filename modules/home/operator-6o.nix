@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -9,8 +8,7 @@ with lib;
 
 let
   cfg = config.identities;
-  gitIni = pkgs.formats.gitIni { };
-  toml = pkgs.formats.toml { };
+  identitiesLib = import ./lib.nix { };
 in
 {
   imports = [
@@ -71,35 +69,23 @@ in
       };
 
       templates = {
-        operator6o-git-config = {
-          file = gitIni.generate "config" (
-            recursiveUpdate {
-              user = {
-                email = config.sops.placeholder.operator6o-email;
-                name = config.sops.placeholder.operator6o-name;
-                signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
-              };
-              commit.gpgsign = true;
-              gpg.format = "ssh";
-            } cfg.operator-6o.git.extraConfig
-          );
-        };
+        operator6o-git-config = mkIf cfg.operator-6o.git.enable (
+          identitiesLib.mkGitConfig {
+            name = config.sops.placeholder.operator6o-name;
+            email = config.sops.placeholder.operator6o-email;
+            signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
+            extraConfig = cfg.operator-6o.git.extraConfig;
+          }
+        );
 
-        operator6o-jj-config = {
-          file = toml.generate "config.toml" (
-            recursiveUpdate {
-              signing = {
-                backend = "ssh";
-                behavior = "own";
-                key = config.sops.placeholder.operator6o-ssh-signing-key;
-              };
-              user = {
-                email = config.sops.placeholder.operator6o-email;
-                name = config.sops.placeholder.operator6o-name;
-              };
-            } cfg.operator-6o.jj.extraConfig
-          );
-        };
+        operator6o-jj-config = mkIf cfg.operator-6o.jj.enable (
+          identitiesLib.mkJujutsuConfig {
+            name = config.sops.placeholder.operator6o-name;
+            email = config.sops.placeholder.operator6o-email;
+            signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
+            extraConfig = cfg.operator-6o.jj.extraConfig;
+          }
+        );
       };
     };
 

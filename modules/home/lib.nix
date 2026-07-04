@@ -1,0 +1,86 @@
+{ lib, ... }:
+
+with lib;
+
+let
+  gitIni = pkgs.formats.gitIni { };
+  toml = pkgs.formats.toml { };
+in
+{
+  mkGitConfigTemplate =
+    {
+      name,
+      email,
+      signingkey,
+      extraConfig,
+    }:
+    {
+      file = gitIni.generate "${name}-gitconfig" (
+        recursiveUpdate {
+          user = {
+            inherit email name signingkey;
+          };
+          commit.gpgsign = true;
+          gpg.format = "ssh";
+        } extraConfig
+      );
+    };
+
+  mkJujutsuConfigTemplate =
+    {
+      name,
+      email,
+      signingkey,
+      extraConfig,
+    }:
+    toml.generate "${name}-jujutsu-config" (
+      recursiveUpdate {
+        signing = {
+          backend = "ssh";
+          behavior = "own";
+          key = signingkey;
+        };
+        user = {
+          inherit email name;
+        };
+      } extraConfig
+    );
+
+  mkGhstackConfigTemplate =
+    {
+      name,
+      token,
+      extraConfig,
+    }:
+    {
+      file = ini.generate "${name}-ghstackrc" (
+        recursiveUpdate {
+          ghstack = {
+            github_oauth = token;
+            github_url = "github.com";
+            github_username = name;
+          };
+        } extraConfig
+      );
+      mode = "0640";
+    };
+
+  mkGlabConfigTemplate =
+    {
+      name,
+      token,
+      extraConfig,
+    }:
+    {
+      file = yaml.generate "${name}-glabrc" (
+        recursiveUpdate {
+          git_protocol = "https";
+          hosts.gitlab.com = {
+            api_host = "gitlab.com";
+            api_protocol = "https";
+            token = token;
+          };
+        } extraConfig
+      );
+    };
+}

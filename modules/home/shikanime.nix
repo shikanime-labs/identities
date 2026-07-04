@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -9,10 +8,7 @@ with lib;
 
 let
   cfg = config.identities;
-  ini = pkgs.formats.ini { };
-  gitIni = pkgs.formats.gitIni { };
-  yaml = pkgs.formats.yaml { };
-  toml = pkgs.formats.toml { };
+  identitiesLib = import ./lib.nix { };
 in
 {
   imports = [
@@ -107,61 +103,37 @@ in
       };
 
       templates = {
-        shikanime-git-config = {
-          file = gitIni.generate "config" (
-            recursiveUpdate {
-              user = {
-                email = config.sops.placeholder.shikanime-email;
-                name = config.sops.placeholder.shikanime-name;
-                signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
-              };
-              commit.gpgsign = true;
-              gpg.format = "ssh";
-            } cfg.shikanime.git.extraConfig
-          );
-        };
+        shikanime-git-config = mkIf cfg.shikanime.git.enable (
+          identitiesLib.mkGitConfig {
+            name = config.sops.placeholder.shikanime-name;
+            email = config.sops.placeholder.shikanime-email;
+            signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
+            extraConfig = cfg.shikanime.git.extraConfig;
+          }
+        );
 
-        shikanime-jj-config = {
-          file = toml.generate "config.toml" (
-            recursiveUpdate {
-              signing = {
-                backend = "ssh";
-                behavior = "own";
-                key = config.sops.placeholder.shikanime-ssh-signing-key;
-              };
-              user = {
-                email = config.sops.placeholder.shikanime-email;
-                name = config.sops.placeholder.shikanime-name;
-              };
-            } cfg.shikanime.jj.extraConfig
-          );
-        };
+        shikanime-jj-config = mkIf cfg.shikanime.jj.enable (
+          identitiesLib.mkJujutsuConfig {
+            name = config.sops.placeholder.shikanime-name;
+            email = config.sops.placeholder.shikanime-email;
+            signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
+            extraConfig = cfg.shikanime.jj.extraConfig;
+          }
+        );
 
-        ghstack-config = mkIf cfg.shikanime.ghstack.enable {
-          file = ini.generate "ghstackrc" (
-            recursiveUpdate {
-              ghstack = {
-                github_oauth = config.sops.placeholder.github-token;
-                github_url = "github.com";
-                github_username = "shikanime";
-              };
-            } cfg.shikanime.ghstack.extraConfig
-          );
-          mode = "0640";
-        };
+        ghstack-config = mkIf cfg.shikanime.ghstack.enable (mkGhstackConfigTemplate {
+          name = config.sops.placeholder.shikanime-name;
+          token = config.sops.placeholder.github-token;
+          extraConfig = cfg.shikanime.ghstack.extraConfig;
+        });
 
-        glab-cli-config = mkIf cfg.shikanime.glab.enable {
-          file = yaml.generate "config.yaml" (
-            recursiveUpdate {
-              git_protocol = "https";
-              hosts.gitlab.com = {
-                api_host = "gitlab.com";
-                api_protocol = "https";
-                token = config.sops.placeholder.gitlab-token;
-              };
-            } cfg.shikanime.glab.extraConfig
-          );
-        };
+        glab-cli-config = mkIf cfg.shikanime.glab.enable (
+          identitiesLib.mkGlabConfigTemplate {
+            name = config.sops.placeholder.shikanime-name;
+            token = config.sops.placeholder.gitlab-token;
+            extraConfig = cfg.shikanime.glab.extraConfig;
+          }
+        );
       };
     };
 

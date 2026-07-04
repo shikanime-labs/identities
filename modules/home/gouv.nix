@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -9,8 +8,7 @@ with lib;
 
 let
   cfg = config.identities;
-  gitIni = pkgs.formats.gitIni { };
-  toml = pkgs.formats.toml { };
+  identitiesLib = import ./lib.nix { };
 in
 {
   imports = [
@@ -71,35 +69,21 @@ in
       };
 
       templates = {
-        gouv-git-config = {
-          file = gitIni.generate "config" (
-            recursiveUpdate {
-              user = {
-                email = config.sops.placeholder.gouv-email;
-                name = config.sops.placeholder.gouv-name;
-                signingkey = config.sops.placeholder.gouv-ssh-signing-key;
-              };
-              commit.gpgsign = true;
-              gpg.format = "ssh";
-            } cfg.gouv.git.extraConfig
-          );
-        };
+        gouv-git-config = mkIf cfg.gouv.git.enable (
+          identitiesLib.mkGitConfig {
+            email = config.sops.placeholder.gouv-email;
+            name = config.sops.placeholder.gouv-name;
+            signingKey = config.sops.placeholder.gouv-ssh-signing-key;
+            extraConfig = cfg.gouv.git.extraConfig;
+          }
+        );
 
-        gouv-jj-config = {
-          file = toml.generate "config.toml" (
-            recursiveUpdate {
-              signing = {
-                backend = "ssh";
-                behavior = "own";
-                key = config.sops.placeholder.gouv-ssh-signing-key;
-              };
-              user = {
-                email = config.sops.placeholder.gouv-email;
-                name = config.sops.placeholder.gouv-name;
-              };
-            } cfg.gouv.jj.extraConfig
-          );
-        };
+        gouv-jj-config = mkIf cfg.gouv.jj.enable (
+          identitiesLib.mkJjConfig {
+            signingKey = config.sops.placeholder.gouv-ssh-signing-key;
+            extraConfig = cfg.gouv.jj.extraConfig;
+          }
+        );
       };
     };
 
