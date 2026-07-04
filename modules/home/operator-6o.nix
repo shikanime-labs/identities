@@ -62,8 +62,8 @@ in
   config = mkIf (cfg.enable && cfg.operator-6o.enable) {
     sops = {
       secrets = {
-        operator6o-email.sopsFile = ./../secrets/operator6o.enc.yaml;
-        operator6o-name.sopsFile = ./../secrets/operator6o.enc.yaml;
+        operator6o-email.sopsFile = ../../secrets/operator6o.enc.yaml;
+        operator6o-name.sopsFile = ../../secrets/operator6o.enc.yaml;
         operator6o-gpg-key.sopsFile = ./../secrets/operator6o.enc.yaml;
         operator6o-ssh-signing-key.sopsFile = ./../secrets/operator6o.enc.yaml;
       };

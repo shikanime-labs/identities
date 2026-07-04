@@ -62,10 +62,10 @@ in
   config = mkIf (cfg.enable && cfg.gouv.enable) {
     sops = {
       secrets = {
-        gouv-email.sopsFile = ./../secrets/gouv.enc.yaml;
-        gouv-name.sopsFile = ./../secrets/gouv.enc.yaml;
-        gouv-gpg-key.sopsFile = ./../secrets/gouv.enc.yaml;
-        gouv-ssh-signing-key.sopsFile = ./../secrets/gouv.enc.yaml;
+        gouv-email.sopsFile = ../../secrets/gouv.enc.yaml;
+        gouv-name.sopsFile = ../../secrets/gouv.enc.yaml;
+        gouv-gpg-key.sopsFile = ../../secrets/gouv.enc.yaml;
+        gouv-ssh-signing-key.sopsFile = ../../secrets/gouv.enc.yaml;
       };
 
       templates = {

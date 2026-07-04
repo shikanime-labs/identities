@@ -78,7 +78,7 @@ in
           hosts.gitlab.com = {
             api_host = "gitlab.com";
             api_protocol = "https";
-            token = token;
+            inherit token;
           };
         } extraConfig
       );
