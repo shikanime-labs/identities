@@ -80,6 +80,8 @@ in
 
         gouv-jj-config = mkIf cfg.gouv.jj.enable (
           identitiesLib.mkJujutsuConfigTemplate {
+            name = config.sops.placeholder.gouv-name;
+            email = config.sops.placeholder.gouv-email;
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
             extraConfig = cfg.gouv.jj.extraConfig;
           }
