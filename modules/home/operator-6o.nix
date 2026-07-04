@@ -1,15 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ identities-lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 
 let
   cfg = config.identities;
-  identitiesLib = pkgs.callPackage ./lib.nix { };
 in
 {
   imports = [
@@ -71,7 +66,7 @@ in
 
       templates = {
         operator6o-git-config = mkIf cfg.operator-6o.git.enable (
-          identitiesLib.mkGitConfigTemplate {
+          identities-lib.mkGitConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
             signingKey = config.sops.placeholder.operator6o-ssh-signing-key;
@@ -80,7 +75,7 @@ in
         );
 
         operator6o-jj-config = mkIf cfg.operator-6o.jj.enable (
-          identitiesLib.mkJujutsuConfigTemplate {
+          identities-lib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
             signingKey = config.sops.placeholder.operator6o-ssh-signing-key;

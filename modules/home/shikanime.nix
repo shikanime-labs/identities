@@ -1,15 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ identities-lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 
 let
   cfg = config.identities;
-  identitiesLib = pkgs.callPackage ./lib.nix { };
 in
 {
   imports = [
@@ -105,7 +100,7 @@ in
 
       templates = {
         shikanime-git-config = mkIf cfg.shikanime.git.enable (
-          identitiesLib.mkGitConfigTemplate {
+          identities-lib.mkGitConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
             signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
@@ -114,7 +109,7 @@ in
         );
 
         shikanime-jj-config = mkIf cfg.shikanime.jj.enable (
-          identitiesLib.mkJujutsuConfigTemplate {
+          identities-lib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
             signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
@@ -123,7 +118,7 @@ in
         );
 
         ghstack-config = mkIf cfg.shikanime.ghstack.enable (
-          identitiesLib.mkGhstackConfigTemplate {
+          identities-lib.mkGhstackConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             token = config.sops.placeholder.github-token;
             extraConfig = cfg.shikanime.ghstack.extraConfig;
@@ -131,7 +126,7 @@ in
         );
 
         glab-cli-config = mkIf cfg.shikanime.glab.enable (
-          identitiesLib.mkGlabConfigTemplate {
+          identities-lib.mkGlabConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             token = config.sops.placeholder.gitlab-token;
             extraConfig = cfg.shikanime.glab.extraConfig;

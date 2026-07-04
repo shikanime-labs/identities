@@ -1,15 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ identities-lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 
 let
   cfg = config.identities;
-  identitiesLib = pkgs.callPackage ./lib.nix { };
 in
 {
   imports = [
@@ -71,7 +66,7 @@ in
 
       templates = {
         gouv-git-config = mkIf cfg.gouv.git.enable (
-          identitiesLib.mkGitConfigTemplate {
+          identities-lib.mkGitConfigTemplate {
             email = config.sops.placeholder.gouv-email;
             name = config.sops.placeholder.gouv-name;
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
@@ -80,7 +75,7 @@ in
         );
 
         gouv-jj-config = mkIf cfg.gouv.jj.enable (
-          identitiesLib.mkJujutsuConfigTemplate {
+          identities-lib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.gouv-name;
             email = config.sops.placeholder.gouv-email;
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
