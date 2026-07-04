@@ -108,7 +108,7 @@ in
           identitiesLib.mkGitConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
-            signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
+            signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
             extraConfig = cfg.shikanime.git.extraConfig;
           }
         );
@@ -117,7 +117,7 @@ in
           identitiesLib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
-            signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
+            signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
             extraConfig = cfg.shikanime.jj.extraConfig;
           }
         );

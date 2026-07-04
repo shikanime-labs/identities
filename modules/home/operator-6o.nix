@@ -74,7 +74,7 @@ in
           identitiesLib.mkGitConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
-            signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
+            signingKey = config.sops.placeholder.operator6o-ssh-signing-key;
             extraConfig = cfg.operator-6o.git.extraConfig;
           }
         );
@@ -83,7 +83,7 @@ in
           identitiesLib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
-            signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
+            signingKey = config.sops.placeholder.operator6o-ssh-signing-key;
             extraConfig = cfg.operator-6o.jj.extraConfig;
           }
         );
