@@ -34,18 +34,20 @@ in
       signingKey,
       extraConfig,
     }:
-    toml.generate "${name}-jujutsu-config" (
-      recursiveUpdate {
-        signing = {
-          backend = "ssh";
-          behavior = "own";
-          key = signingKey;
-        };
-        user = {
-          inherit email name;
-        };
-      } extraConfig
-    );
+    {
+      file = toml.generate "${name}-jujutsu-config" (
+        recursiveUpdate {
+          signing = {
+            backend = "ssh";
+            behavior = "own";
+            key = signingKey;
+          };
+          user = {
+            inherit email name;
+          };
+        } extraConfig
+      );
+    };
 
   mkGhstackConfigTemplate =
     {
