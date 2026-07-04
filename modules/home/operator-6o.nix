@@ -70,7 +70,7 @@ in
 
       templates = {
         operator6o-git-config = mkIf cfg.operator-6o.git.enable (
-          identitiesLib.mkGitConfig {
+          identitiesLib.mkGitConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
             signingkey = config.sops.placeholder.operator6o-ssh-signing-key;
@@ -79,7 +79,7 @@ in
         );
 
         operator6o-jj-config = mkIf cfg.operator-6o.jj.enable (
-          identitiesLib.mkJujutsuConfig {
+          identitiesLib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
             signingkey = config.sops.placeholder.operator6o-ssh-signing-key;

@@ -104,7 +104,7 @@ in
 
       templates = {
         shikanime-git-config = mkIf cfg.shikanime.git.enable (
-          identitiesLib.mkGitConfig {
+          identitiesLib.mkGitConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
             signingkey = config.sops.placeholder.shikanime-ssh-signing-key;
@@ -113,7 +113,7 @@ in
         );
 
         shikanime-jj-config = mkIf cfg.shikanime.jj.enable (
-          identitiesLib.mkJujutsuConfig {
+          identitiesLib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
             signingkey = config.sops.placeholder.shikanime-ssh-signing-key;

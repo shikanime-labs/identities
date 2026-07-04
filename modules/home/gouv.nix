@@ -70,7 +70,7 @@ in
 
       templates = {
         gouv-git-config = mkIf cfg.gouv.git.enable (
-          identitiesLib.mkGitConfig {
+          identitiesLib.mkGitConfigTemplate {
             email = config.sops.placeholder.gouv-email;
             name = config.sops.placeholder.gouv-name;
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
@@ -79,7 +79,7 @@ in
         );
 
         gouv-jj-config = mkIf cfg.gouv.jj.enable (
-          identitiesLib.mkJjConfig {
+          identitiesLib.mkJujutsuConfigTemplate {
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
             extraConfig = cfg.gouv.jj.extraConfig;
           }
