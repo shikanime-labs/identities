@@ -11,14 +11,15 @@ in
     {
       name,
       email,
-      signingkey,
+      signingKey,
       extraConfig,
     }:
     {
       file = gitIni.generate "${name}-gitconfig" (
         recursiveUpdate {
           user = {
-            inherit email name signingkey;
+            inherit email name;
+            signingkey = signingKey;
           };
           commit.gpgsign = true;
           gpg.format = "ssh";
@@ -30,7 +31,7 @@ in
     {
       name,
       email,
-      signingkey,
+      signingKey,
       extraConfig,
     }:
     toml.generate "${name}-jujutsu-config" (
@@ -38,7 +39,7 @@ in
         signing = {
           backend = "ssh";
           behavior = "own";
-          key = signingkey;
+          key = signingKey;
         };
         user = {
           inherit email name;
