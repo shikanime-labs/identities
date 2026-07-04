@@ -4,8 +4,9 @@ with lib;
 
 let
   gitIni = pkgs.formats.gitIni { };
-  toml = pkgs.formats.toml { };
   ini = pkgs.formats.ini { };
+  toml = pkgs.formats.toml { };
+  yaml = pkgs.formats.yaml { };
 in
 {
   mkGitConfigTemplate =
