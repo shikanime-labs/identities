@@ -8,7 +8,7 @@ with lib;
 
 let
   cfg = config.identities;
-  identitiesLib = import ./lib.nix { };
+  identitiesLib = import ./lib.nix { inherit lib; };
 in
 {
   imports = [
