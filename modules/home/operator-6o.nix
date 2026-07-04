@@ -73,7 +73,7 @@ in
       templates = {
         operator6o-git-config = {
           file = gitIni.generate "config" (
-            recursiveUpdate cfg.operator-6o.git.extraConfig {
+            recursiveUpdate {
               user = {
                 email = config.sops.placeholder.operator6o-email;
                 name = config.sops.placeholder.operator6o-name;
@@ -81,13 +81,13 @@ in
               };
               commit.gpgsign = true;
               gpg.format = "ssh";
-            }
+            } cfg.operator-6o.git.extraConfig
           );
         };
 
         operator6o-jj-config = {
           file = toml.generate "config.toml" (
-            recursiveUpdate cfg.operator-6o.jj.extraConfig {
+            recursiveUpdate {
               signing = {
                 backend = "ssh";
                 behavior = "own";
@@ -97,7 +97,7 @@ in
                 email = config.sops.placeholder.operator6o-email;
                 name = config.sops.placeholder.operator6o-name;
               };
-            }
+            } cfg.operator-6o.jj.extraConfig
           );
         };
       };

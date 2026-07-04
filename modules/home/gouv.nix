@@ -73,7 +73,7 @@ in
       templates = {
         gouv-git-config = {
           file = gitIni.generate "config" (
-            recursiveUpdate cfg.gouv.git.extraConfig {
+            recursiveUpdate {
               user = {
                 email = config.sops.placeholder.gouv-email;
                 name = config.sops.placeholder.gouv-name;
@@ -81,13 +81,13 @@ in
               };
               commit.gpgsign = true;
               gpg.format = "ssh";
-            }
+            } cfg.gouv.git.extraConfig
           );
         };
 
         gouv-jj-config = {
           file = toml.generate "config.toml" (
-            recursiveUpdate cfg.gouv.jj.extraConfig {
+            recursiveUpdate {
               signing = {
                 backend = "ssh";
                 behavior = "own";
@@ -97,7 +97,7 @@ in
                 email = config.sops.placeholder.gouv-email;
                 name = config.sops.placeholder.gouv-name;
               };
-            }
+            } cfg.gouv.jj.extraConfig
           );
         };
       };

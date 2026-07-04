@@ -109,7 +109,7 @@ in
       templates = {
         shikanime-git-config = {
           file = gitIni.generate "config" (
-            recursiveUpdate cfg.shikanime.git.extraConfig {
+            recursiveUpdate {
               user = {
                 email = config.sops.placeholder.shikanime-email;
                 name = config.sops.placeholder.shikanime-name;
@@ -117,13 +117,13 @@ in
               };
               commit.gpgsign = true;
               gpg.format = "ssh";
-            }
+            } cfg.shikanime.git.extraConfig
           );
         };
 
         shikanime-jj-config = {
           file = toml.generate "config.toml" (
-            recursiveUpdate cfg.shikanime.jj.extraConfig {
+            recursiveUpdate {
               signing = {
                 backend = "ssh";
                 behavior = "own";
@@ -133,33 +133,33 @@ in
                 email = config.sops.placeholder.shikanime-email;
                 name = config.sops.placeholder.shikanime-name;
               };
-            }
+            } cfg.shikanime.jj.extraConfig
           );
         };
 
         ghstack-config = mkIf cfg.shikanime.ghstack.enable {
           file = ini.generate "ghstackrc" (
-            recursiveUpdate cfg.shikanime.ghstack.extraConfig {
+            recursiveUpdate {
               ghstack = {
                 github_oauth = config.sops.placeholder.github-token;
                 github_url = "github.com";
                 github_username = "shikanime";
               };
-            }
+            } cfg.shikanime.ghstack.extraConfig
           );
           mode = "0640";
         };
 
         glab-cli-config = mkIf cfg.shikanime.glab.enable {
           file = yaml.generate "config.yaml" (
-            recursiveUpdate cfg.shikanime.glab.extraConfig {
+            recursiveUpdate {
               git_protocol = "https";
               hosts.gitlab.com = {
                 api_host = "gitlab.com";
                 api_protocol = "https";
                 token = config.sops.placeholder.gitlab-token;
               };
-            }
+            } cfg.shikanime.glab.extraConfig
           );
         };
       };
