@@ -121,11 +121,13 @@ in
           }
         );
 
-        ghstack-config = mkIf cfg.shikanime.ghstack.enable (mkGhstackConfigTemplate {
-          name = config.sops.placeholder.shikanime-name;
-          token = config.sops.placeholder.github-token;
-          extraConfig = cfg.shikanime.ghstack.extraConfig;
-        });
+        ghstack-config = mkIf cfg.shikanime.ghstack.enable (
+          identitiesLib.mkGhstackConfigTemplate {
+            name = config.sops.placeholder.shikanime-name;
+            token = config.sops.placeholder.github-token;
+            extraConfig = cfg.shikanime.ghstack.extraConfig;
+          }
+        );
 
         glab-cli-config = mkIf cfg.shikanime.glab.enable (
           identitiesLib.mkGlabConfigTemplate {
