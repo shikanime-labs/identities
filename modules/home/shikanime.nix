@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -8,7 +9,7 @@ with lib;
 
 let
   cfg = config.identities;
-  identitiesLib = import ./lib.nix { inherit lib; };
+  identitiesLib = pkgs.callPackage ./lib.nix { };
 in
 {
   imports = [
