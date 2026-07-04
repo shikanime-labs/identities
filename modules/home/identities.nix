@@ -16,7 +16,7 @@ with lib;
       };
       extraConfig = mkOption {
         type = types.attrs;
-        default = config.programs.git.settings;
+        default = { };
         description = "Extra configuration options for git identity";
       };
     };
@@ -27,7 +27,7 @@ with lib;
       };
       extraConfig = mkOption {
         type = types.attrs;
-        default = config.programs.jujutsu.settings;
+        default = { };
         description = "Extra configuration options for Jujutsu identity";
       };
     };
