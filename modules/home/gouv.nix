@@ -44,6 +44,14 @@ in
         default = config.identities.jj.enable;
       };
 
+      priority = mkOption {
+        default = 20;
+        description = ''
+          Priority of the generated Jujutsu config file for shikanime.
+        '';
+        type = types.int;
+      };
+
       extraConfig = mkOption {
         default = config.identities.jj.extraConfig;
         description = ''
@@ -94,7 +102,7 @@ in
       )
     ];
 
-    xdg.configFile."jj/conf.d/gouv.toml" = mkIf cfg.gouv.jj.enable {
+    xdg.configFile."jj/conf.d/${toString cfg.gouv.jj.priority}-gouv.toml" = mkIf cfg.gouv.jj.enable {
       source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.gouv-jj-config.path;
     };
   };

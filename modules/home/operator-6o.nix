@@ -44,6 +44,14 @@ in
         default = config.identities.jj.enable;
       };
 
+      priority = mkOption {
+        default = 20;
+        description = ''
+          Priority of the generated Jujutsu config file for shikanime.
+        '';
+        type = types.int;
+      };
+
       extraConfig = mkOption {
         default = config.identities.jj.extraConfig;
         description = ''
@@ -96,8 +104,10 @@ in
       )
     ];
 
-    xdg.configFile."jj/conf.d/operator6o.toml" = mkIf cfg.operator-6o.jj.enable {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
-    };
+    xdg.configFile."jj/conf.d/${toString cfg.operator-6o.jj.priority}-operator6o.toml" =
+      mkIf cfg.operator-6o.jj.enable
+        {
+          source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
+        };
   };
 }

@@ -44,6 +44,14 @@ in
         default = config.identities.jj.enable;
       };
 
+      priority = mkOption {
+        default = 10;
+        description = ''
+          Priority of the generated Jujutsu config file for shikanime.
+        '';
+        type = types.int;
+      };
+
       extraConfig = mkOption {
         default = config.identities.jj.extraConfig;
         description = ''
@@ -144,9 +152,11 @@ in
       )
     ];
 
-    xdg.configFile."jj/conf.d/shikanime.toml" = mkIf cfg.shikanime.jj.enable {
-      source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-jj-config.path;
-    };
+    xdg.configFile."jj/conf.d/${toString cfg.shikanime.jj.priority}-shikanime.toml" =
+      mkIf cfg.shikanime.jj.enable
+        {
+          source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.shikanime-jj-config.path;
+        };
 
     home.sessionVariables = mkIf cfg.shikanime.ghstack.enable {
       GHSTACKRC_PATH = config.lib.file.mkOutOfStoreSymlink config.sops.templates.ghstack-config.path;
