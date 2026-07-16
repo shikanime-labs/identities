@@ -39,6 +39,7 @@ in
     {
       file = toml.generate "${name}-jujutsu-config" (
         recursiveUpdate {
+          git.sign-on-push = true;
           signing = {
             backend = "ssh";
             behavior = "own";
