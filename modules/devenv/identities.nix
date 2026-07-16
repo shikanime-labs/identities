@@ -40,7 +40,7 @@ in
               "age1um232l0h8wn9mtha2qf4f4mnf7ucjayvf5qxjvynatmasg8qg5mshekvjl"
             ]
             ++ optionals cfg.telsha.enable [
-              "age1pwl9yz4k4255a4h8qz7lafce8wxhsul0cnqwmr8528fqgujlfshshv3z3g"
+              "age1eak84xcr44yfqsg843rfu2xajxsyvjwh67a630htpnd0scy7yu5szjfh8d"
             ];
         } cfg.sops.extraConfig)
       ];
