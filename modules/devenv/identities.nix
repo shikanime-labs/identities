@@ -25,6 +25,8 @@ in
       };
     };
 
+    ishtar.enable = mkEnableOption "Ishtar";
+
     nixtar.enable = mkEnableOption "Nixtar";
 
     telsha.enable = mkEnableOption "Telsha";
@@ -36,11 +38,14 @@ in
         (recursiveUpdate {
           path_regex = ".*";
           age =
-            optionals cfg.nixtar.enable [
+            optionals cfg.ishtar.enable [
+              "age1vn5a6cluts3ul6ssyfajewyr58htmlqlvfjryd6y9kpjsyvk93cq5p5y73"
+            ]
+            ++ optionals cfg.nixtar.enable [
               "age1um232l0h8wn9mtha2qf4f4mnf7ucjayvf5qxjvynatmasg8qg5mshekvjl"
             ]
             ++ optionals cfg.telsha.enable [
-              "age1eak84xcr44yfqsg843rfu2xajxsyvjwh67a630htpnd0scy7yu5szjfh8d"
+              "age1pwl9yz4k4255a4h8qz7lafce8wxhsul0cnqwmr8528fqgujlfshshv3z3g"
             ];
         } cfg.sops.extraConfig)
       ];

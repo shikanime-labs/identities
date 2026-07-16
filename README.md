@@ -41,15 +41,15 @@ Import the shared module once, then enable the identities you want:
             gouv = {
               enable = true;
               git.condition = "gitpath:/home/shika/Source/Repos/github.com/cloud-pi-native";
-              jj.extraConfig."--when.repositories" = [
+              jj.extraConfig."--when".repositories = [
                 "/home/shika/Source/Repos/github.com/cloud-pi-native"
               ];
             };
 
-            "operator-6o" = {
+            operator-6o = {
               enable = true;
               git.condition = "gitpath:/home/shika/Source/Repos/github.com/operator6o";
-              jj.extraConfig."--when.repositories" = [
+              jj.extraConfig."--when".repositories = [
                 "/home/shika/Source/Repos/github.com/operator6o"
               ];
             };
