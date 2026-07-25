@@ -12,9 +12,7 @@ in
   ];
 
   options.identities.gouv = {
-    enable = mkEnableOption "the gouv identity" // {
-      default = false;
-    };
+    enable = mkEnableOption "the gouv identity";
 
     git = {
       enable = mkEnableOption "git identity includes for gouv" // {

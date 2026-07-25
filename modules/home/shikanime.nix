@@ -12,9 +12,7 @@ in
   ];
 
   options.identities.shikanime = {
-    enable = mkEnableOption "the shikanime identity" // {
-      default = false;
-    };
+    enable = mkEnableOption "the shikanime identity";
 
     git = {
       enable = mkEnableOption "git identity includes for shikanime" // {

@@ -78,6 +78,13 @@
             ./modules/devenv/default.nix
           ];
 
+          identities = {
+            enable = true;
+            ishtar.enable = true;
+            nixtar.enable = true;
+            telsha.enable = true;
+          };
+
           sops.enable = true;
         };
       };

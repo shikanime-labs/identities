@@ -12,9 +12,7 @@ in
   ];
 
   options.identities.operator-6o = {
-    enable = mkEnableOption "the operator-6o identity" // {
-      default = false;
-    };
+    enable = mkEnableOption "the operator-6o identity";
 
     git = {
       enable = mkEnableOption "git identity includes for operator-6o" // {
