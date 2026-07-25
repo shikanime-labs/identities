@@ -25,11 +25,41 @@ in
       };
     };
 
-    ishtar.enable = mkEnableOption "Ishtar";
+    ishtar = {
+      enable = mkEnableOption "Ishtar";
+      ageKeys = mkOption {
+        type = types.listOf types.str;
+        description = "Age key for Ishtar";
+        default = [
+          "age1vn5a6cluts3ul6ssyfajewyr58htmlqlvfjryd6y9kpjsyvk93cq5p5y73"
+        ];
+        readOnly = true;
+      };
+    };
 
-    nixtar.enable = mkEnableOption "Nixtar";
+    nixtar = {
+      enable = mkEnableOption "Nixtar";
+      ageKeys = mkOption {
+        type = types.listOf types.str;
+        description = "Age key for Nixtar";
+        default = [
+          "age1um232l0h8wn9mtha2qf4f4mnf7ucjayvf5qxjvynatmasg8qg5mshekvjl"
+        ];
+        readOnly = true;
+      };
+    };
 
-    telsha.enable = mkEnableOption "Telsha";
+    telsha = {
+      enable = mkEnableOption "Telsha";
+      ageKeys = mkOption {
+        type = types.listOf types.str;
+        description = "Age key for Telsha";
+        default = [
+          "age1pwl9yz4k4255a4h8qz7lafce8wxhsul0cnqwmr8528fqgujlfshshv3z3g"
+        ];
+        readOnly = true;
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -38,15 +68,9 @@ in
         (recursiveUpdate {
           path_regex = ".*";
           age =
-            optionals cfg.ishtar.enable [
-              "age1vn5a6cluts3ul6ssyfajewyr58htmlqlvfjryd6y9kpjsyvk93cq5p5y73"
-            ]
-            ++ optionals cfg.nixtar.enable [
-              "age1um232l0h8wn9mtha2qf4f4mnf7ucjayvf5qxjvynatmasg8qg5mshekvjl"
-            ]
-            ++ optionals cfg.telsha.enable [
-              "age1pwl9yz4k4255a4h8qz7lafce8wxhsul0cnqwmr8528fqgujlfshshv3z3g"
-            ];
+            optionals cfg.ishtar.enable cfg.ishtar.ageKeys
+            ++ optionals cfg.nixtar.enable cfg.nixtar.ageKeys
+            ++ optionals cfg.telsha.enable cfg.telsha.ageKeys;
         } cfg.sops.extraConfig)
       ];
     };
