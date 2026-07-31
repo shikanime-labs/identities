@@ -45,7 +45,7 @@ in
       priority = mkOption {
         default = 20;
         description = ''
-          Priority of the generated Jujutsu config file for shikanime.
+          Priority of the generated Jujutsu config file for gouv.
         '';
         type = types.int;
       };
