@@ -127,7 +127,6 @@ in
 
         ghstack-config = mkIf cfg.shikanime.ghstack.enable (
           identities-lib.mkGhstackConfigTemplate {
-            name = config.sops.placeholder.shikanime-name;
             username = config.sops.placeholder.shikanime-username;
             token = config.sops.placeholder.github-token;
             extraConfig = cfg.shikanime.ghstack.extraConfig;
@@ -136,7 +135,6 @@ in
 
         glab-cli-config = mkIf cfg.shikanime.glab.enable (
           identities-lib.mkGlabConfigTemplate {
-            name = config.sops.placeholder.shikanime-name;
             username = config.sops.placeholder.shikanime-username;
             token = config.sops.placeholder.gitlab-token;
             extraConfig = cfg.shikanime.glab.extraConfig;
