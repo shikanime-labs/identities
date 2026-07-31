@@ -75,6 +75,7 @@ in
           identities-lib.mkGitConfigTemplate {
             email = config.sops.placeholder.gouv-email;
             name = config.sops.placeholder.gouv-name;
+            username = config.sops.placeholder.gouv-username;
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
             extraConfig = cfg.gouv.git.extraConfig;
           }
@@ -84,6 +85,7 @@ in
           identities-lib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.gouv-name;
             email = config.sops.placeholder.gouv-email;
+            username = config.sops.placeholder.gouv-username;
             signingKey = config.sops.placeholder.gouv-ssh-signing-key;
             extraConfig = cfg.gouv.jj.extraConfig;
           }

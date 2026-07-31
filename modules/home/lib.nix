@@ -13,11 +13,12 @@ in
     {
       name,
       email,
+      username,
       signingKey,
       extraConfig,
     }:
     {
-      file = gitIni.generate "${name}-gitconfig" (
+      file = gitIni.generate "${username}-gitconfig" (
         recursiveUpdate {
           user = {
             inherit email name;
@@ -34,17 +35,20 @@ in
       name,
       email,
       signingKey,
+      username,
       extraConfig,
     }:
     {
-      file = toml.generate "${name}-jujutsu-config" (
+      file = toml.generate "${username}-jujutsu-config" (
         recursiveUpdate {
           git.sign-on-push = true;
+          remotes.origin.auto-track-bookmarks = "${username}/*";
           signing = {
             backend = "ssh";
             behavior = "own";
             key = signingKey;
           };
+          templates.git_push_bookmark = "\"${username}/push-\" ++ change_id.short()";
           user = {
             inherit email name;
           };
@@ -54,17 +58,17 @@ in
 
   mkGhstackConfigTemplate =
     {
-      name,
+      username,
       token,
       extraConfig,
     }:
     {
-      file = ini.generate "${name}-ghstackrc" (
+      file = ini.generate "${username}-ghstackrc" (
         recursiveUpdate {
           ghstack = {
             github_oauth = token;
             github_url = "github.com";
-            github_username = name;
+            github_username = username;
           };
         } extraConfig
       );
@@ -73,12 +77,12 @@ in
 
   mkGlabConfigTemplate =
     {
-      name,
+      username,
       token,
       extraConfig,
     }:
     {
-      file = yaml.generate "${name}-glabrc" (
+      file = yaml.generate "${username}-glabrc" (
         recursiveUpdate {
           git_protocol = "https";
           hosts.gitlab.com = {
