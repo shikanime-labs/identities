@@ -13,7 +13,7 @@ in
   imports = [
     ./identities.nix
     (importApplyWithLib ./gouv.nix)
-    (importApplyWithLib ./operator-6o.nix)
+    (importApplyWithLib ./operator6o.nix)
     (importApplyWithLib ./shikanime.nix)
   ];
 }

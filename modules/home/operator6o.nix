@@ -11,11 +11,11 @@ in
     ./identities.nix
   ];
 
-  options.identities.operator-6o = {
-    enable = mkEnableOption "the operator-6o identity";
+  options.identities.operator6o = {
+    enable = mkEnableOption "the operator6o identity";
 
     git = {
-      enable = mkEnableOption "git identity includes for operator-6o" // {
+      enable = mkEnableOption "git identity includes for operator6o" // {
         default = config.identities.git.enable;
       };
 
@@ -38,7 +38,7 @@ in
     };
 
     jj = {
-      enable = mkEnableOption "Jujutsu identity config for operator-6o" // {
+      enable = mkEnableOption "Jujutsu identity config for operator6o" // {
         default = config.identities.jj.enable;
       };
 
@@ -61,7 +61,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && cfg.operator-6o.enable) {
+  config = mkIf (cfg.enable && cfg.operator6o.enable) {
     sops = {
       secrets = {
         operator6o-username.sopsFile = ../../secrets/operator6o.enc.yaml;
@@ -72,41 +72,41 @@ in
       };
 
       templates = {
-        operator6o-git-config = mkIf cfg.operator-6o.git.enable (
+        operator6o-git-config = mkIf cfg.operator6o.git.enable (
           identities-lib.mkGitConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
             username = config.sops.placeholder.operator6o-username;
             signingKey = config.sops.placeholder.operator6o-ssh-signing-key;
-            extraConfig = cfg.operator-6o.git.extraConfig;
+            extraConfig = cfg.operator6o.git.extraConfig;
           }
         );
 
-        operator6o-jj-config = mkIf cfg.operator-6o.jj.enable (
+        operator6o-jj-config = mkIf cfg.operator6o.jj.enable (
           identities-lib.mkJujutsuConfigTemplate {
             name = config.sops.placeholder.operator6o-name;
             email = config.sops.placeholder.operator6o-email;
             username = config.sops.placeholder.operator6o-username;
             signingKey = config.sops.placeholder.operator6o-ssh-signing-key;
-            extraConfig = cfg.operator-6o.jj.extraConfig;
+            extraConfig = cfg.operator6o.jj.extraConfig;
           }
         );
       };
     };
 
-    programs.git.includes = mkIf cfg.operator-6o.git.enable [
+    programs.git.includes = mkIf cfg.operator6o.git.enable [
       (
         {
           path = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-git-config.path;
         }
-        // optionalAttrs (cfg.operator-6o.git.condition != null) {
-          condition = cfg.operator-6o.git.condition;
+        // optionalAttrs (cfg.operator6o.git.condition != null) {
+          condition = cfg.operator6o.git.condition;
         }
       )
     ];
 
-    xdg.configFile."jj/conf.d/${toString cfg.operator-6o.jj.priority}-operator6o.toml" =
-      mkIf cfg.operator-6o.jj.enable
+    xdg.configFile."jj/conf.d/${toString cfg.operator6o.jj.priority}-operator6o.toml" =
+      mkIf cfg.operator6o.jj.enable
         {
           source = config.lib.file.mkOutOfStoreSymlink config.sops.templates.operator6o-jj-config.path;
         };

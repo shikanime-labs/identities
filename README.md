@@ -46,7 +46,7 @@ Import the shared module once, then enable the identities you want:
               ];
             };
 
-            operator-6o = {
+            operator6o = {
               enable = true;
               git.condition = "gitpath:/home/shika/Source/Repos/github.com/operator6o";
               jj.extraConfig."--when".repositories = [
@@ -90,7 +90,7 @@ tool settings.
   - `jj/conf.d/shikanime.toml`
 - `gouv`
   - `jj/conf.d/gouv.toml`
-- `operator-6o`
+- `operator6o`
   - `jj/conf.d/operator6o.toml`
 
 Git identity snippets are written through `programs.git.includes`.
