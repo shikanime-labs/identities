@@ -1,5 +1,9 @@
-{ identities-lib, ... }:
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  identities-lib,
+  ...
+}:
 
 with lib;
 
