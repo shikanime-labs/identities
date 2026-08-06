@@ -19,12 +19,12 @@ They only emit config fragments. The consumer is responsible for enabling
   - Sops secrets: `gouv-name`, `gouv-email`, `gouv-ssh-signing-key`
   - Sops file: `secrets/gouv.enc.yaml`
   - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`
-- **operator6o** — YoRHa operator identity.
-  - Sops secrets: `operator6o-name`, `operator6o-email`,
-    `operator6o-ssh-signing-key`
-  - Sops file: `secrets/operator6o.enc.yaml`
+- **automata** — YoRHa operator identity.
+  - Sops secrets: `automata-name`, `automata-email`,
+    `automata-ssh-signing-key`
+  - Sops file: `secrets/automata.enc.yaml`
   - Output: git includes (scoped via `git.condition`),
-    `jj/conf.d/operator6o.conf`
+    `jj/conf.d/automata.toml`
 
 ## Usage
 
@@ -73,7 +73,7 @@ Inspired by Catppuccin/nix:
   the generated config; GitLab host and token fields are fixed by the module
 - `identities.homeModules.default` — option-driven home-manager module that
   exposes `identities.shikanime.enable`, `identities.gouv.enable`, and
-  `identities."operator6o".enable`
+  `identities."automata".enable`
 
 ## File Structure
 
@@ -83,12 +83,12 @@ modules/
 ├── identities.nix     # Top-level options (global toggle, git/jj)
 ├── shikanime.nix      # Primary identity (sops + git + jj)
 ├── gouv.nix           # Government identity (sops + git + jj)
-└── operator6o.nix    # YoRHa operator identity (sops + git + jj)
+└── automata.nix    # YoRHa operator identity (sops + git + jj)
 
 secrets/
 ├── shikanime.enc.yaml  # Sops-encrypted PII for shikanime
 ├── gouv.enc.yaml       # Sops-encrypted PII for gouv
-└── operator6o.enc.yaml # Sops-encrypted PII for operator6o
+└── automata.enc.yaml # Sops-encrypted PII for automata
 ```
 
 ## Sops
