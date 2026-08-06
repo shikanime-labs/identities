@@ -46,11 +46,11 @@ Import the shared module once, then enable the identities you want:
               ];
             };
 
-            operator6o = {
+            automata = {
               enable = true;
-              git.condition = "gitpath:/home/shika/Source/Repos/github.com/operator6o";
+              git.condition = "gitpath:/home/shika/Source/Repos/github.com/automata";
               jj.extraConfig."--when".repositories = [
-                "/home/shika/Source/Repos/github.com/operator6o"
+                "/home/shika/Source/Repos/github.com/automata"
               ];
             };
           };
@@ -90,8 +90,8 @@ tool settings.
   - `jj/conf.d/shikanime.toml`
 - `gouv`
   - `jj/conf.d/gouv.toml`
-- `operator6o`
-  - `jj/conf.d/operator6o.toml`
+- `automata`
+  - `jj/conf.d/automata.toml`
 
 Git identity snippets are written through `programs.git.includes`.
 
@@ -101,7 +101,7 @@ The encrypted values live in:
 
 - `secrets/shikanime.enc.yaml`
 - `secrets/gouv.enc.yaml`
-- `secrets/operator6o.enc.yaml`
+- `secrets/automata.enc.yaml`
 
 The repo ships a SOPS-enabled dev shell. Edit secrets in the `identities`
 repository with:

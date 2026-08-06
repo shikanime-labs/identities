@@ -9,7 +9,7 @@ in
   imports = [
     ./identities.nix
     ./gouv.nix
-    ./operator6o.nix
+    ./automata.nix
     ./shikanime.nix
   ];
 
