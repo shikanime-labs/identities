@@ -11,17 +11,18 @@ They only emit config fragments. The consumer is responsible for enabling
 ## Identities
 
 - **shikanime** — Primary identity for Shikanime Studio work.
-  - Sops secrets: `name`, `email`, `gpg-key`, `ssh-signing-key`, `github-token`,
-    `gitlab-token`
+  - Sops secrets: `shikanime-name`, `shikanime-email`, `shikanime-gpg-key`,
+    `shikanime-ssh-signing-key`, `github-token`, `gitlab-token`
   - Sops file: `secrets/shikanime.enc.yaml`
   - Output: git includes, `jj/conf.d/shikanime.toml`
 - **gouv** — Government identity.
-  - Sops secrets: `name`, `email`, `gpg-key`, `ssh-signing-key`
+  - Sops secrets: `gouv-name`, `gouv-email`, `gouv-gpg-key`,
+    `gouv-ssh-signing-key`
   - Sops file: `secrets/gouv.enc.yaml`
   - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`
 - **automata** — YoRHa operator identity (`yorha-automata` GitHub login).
-  - Sops secrets: `name`, `email`, `gpg-key`, `ssh-signing-key`,
-    `automata-github-token`
+  - Sops secrets: `automata-name`, `automata-email`, `automata-gpg-key`,
+    `automata-ssh-signing-key`, `automata-github-token`
   - Sops file: `secrets/automata.enc.yaml`
   - Output: git includes (scoped via `git.condition`),
     `jj/conf.d/automata.toml`, optional `GHSTACKRC_PATH` ghstack config

@@ -86,38 +86,38 @@ in
   config = mkIf (cfg.enable && cfg.automata.enable) {
     sops = {
       secrets = {
-        username.sopsFile = ../../secrets/automata.enc.yaml;
-        email.sopsFile = ../../secrets/automata.enc.yaml;
-        name.sopsFile = ../../secrets/automata.enc.yaml;
+        automata-username.sopsFile = ../../secrets/automata.enc.yaml;
+        automata-email.sopsFile = ../../secrets/automata.enc.yaml;
+        automata-name.sopsFile = ../../secrets/automata.enc.yaml;
         automata-github-token.sopsFile = ../../secrets/automata.enc.yaml;
-        gpg-key.sopsFile = ../../secrets/automata.enc.yaml;
-        ssh-signing-key.sopsFile = ../../secrets/automata.enc.yaml;
+        automata-gpg-key.sopsFile = ../../secrets/automata.enc.yaml;
+        automata-ssh-signing-key.sopsFile = ../../secrets/automata.enc.yaml;
       };
 
       templates = {
         "automata-git-config" = mkIf cfg.automata.git.enable (
           identities-lib.mkGitConfigTemplate {
-            name = config.sops.placeholder."name";
-            email = config.sops.placeholder."email";
-            username = config.sops.placeholder."username";
-            signingKey = config.sops.placeholder."ssh-signing-key";
+            name = config.sops.placeholder."automata-name";
+            email = config.sops.placeholder."automata-email";
+            username = config.sops.placeholder."automata-username";
+            signingKey = config.sops.placeholder."automata-ssh-signing-key";
             extraConfig = cfg.automata.git.extraConfig;
           }
         );
 
         "automata-jj-config" = mkIf cfg.automata.jj.enable (
           identities-lib.mkJujutsuConfigTemplate {
-            name = config.sops.placeholder."name";
-            email = config.sops.placeholder."email";
-            username = config.sops.placeholder."username";
-            signingKey = config.sops.placeholder."ssh-signing-key";
+            name = config.sops.placeholder."automata-name";
+            email = config.sops.placeholder."automata-email";
+            username = config.sops.placeholder."automata-username";
+            signingKey = config.sops.placeholder."automata-ssh-signing-key";
             extraConfig = cfg.automata.jj.extraConfig;
           }
         );
 
         "automata-ghstack-config" = mkIf cfg.automata.ghstack.enable (
           identities-lib.mkGhstackConfigTemplate {
-            username = config.sops.placeholder."username";
+            username = config.sops.placeholder."automata-username";
             token = config.sops.placeholder."automata-github-token";
             extraConfig = cfg.automata.ghstack.extraConfig;
           }

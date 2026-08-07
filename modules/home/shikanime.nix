@@ -102,37 +102,37 @@ in
       secrets = {
         github-token.sopsFile = ../../secrets/shikanime.enc.yaml;
         gitlab-token.sopsFile = ../../secrets/shikanime.enc.yaml;
-        email.sopsFile = ../../secrets/shikanime.enc.yaml;
-        gpg-key.sopsFile = ../../secrets/shikanime.enc.yaml;
-        name.sopsFile = ../../secrets/shikanime.enc.yaml;
-        ssh-signing-key.sopsFile = ../../secrets/shikanime.enc.yaml;
-        username.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-email.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-gpg-key.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-name.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-ssh-signing-key.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-username.sopsFile = ../../secrets/shikanime.enc.yaml;
       };
 
       templates = {
         shikanime-git-config = mkIf cfg.shikanime.git.enable (
           identities-lib.mkGitConfigTemplate {
-            name = config.sops.placeholder.name;
-            email = config.sops.placeholder.email;
-            username = config.sops.placeholder.username;
-            signingKey = config.sops.placeholder.ssh-signing-key;
+            name = config.sops.placeholder.shikanime-name;
+            email = config.sops.placeholder.shikanime-email;
+            username = config.sops.placeholder.shikanime-username;
+            signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
             extraConfig = cfg.shikanime.git.extraConfig;
           }
         );
 
         shikanime-jj-config = mkIf cfg.shikanime.jj.enable (
           identities-lib.mkJujutsuConfigTemplate {
-            name = config.sops.placeholder.name;
-            email = config.sops.placeholder.email;
-            username = config.sops.placeholder.username;
-            signingKey = config.sops.placeholder.ssh-signing-key;
+            name = config.sops.placeholder.shikanime-name;
+            email = config.sops.placeholder.shikanime-email;
+            username = config.sops.placeholder.shikanime-username;
+            signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
             extraConfig = cfg.shikanime.jj.extraConfig;
           }
         );
 
         ghstack-config = mkIf cfg.shikanime.ghstack.enable (
           identities-lib.mkGhstackConfigTemplate {
-            username = config.sops.placeholder.username;
+            username = config.sops.placeholder.shikanime-username;
             token = config.sops.placeholder.github-token;
             extraConfig = cfg.shikanime.ghstack.extraConfig;
           }
@@ -140,7 +140,7 @@ in
 
         glab-cli-config = mkIf cfg.shikanime.glab.enable (
           identities-lib.mkGlabConfigTemplate {
-            username = config.sops.placeholder.username;
+            username = config.sops.placeholder.shikanime-username;
             token = config.sops.placeholder.gitlab-token;
             extraConfig = cfg.shikanime.glab.extraConfig;
           }
