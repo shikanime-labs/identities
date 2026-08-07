@@ -63,22 +63,6 @@ in
         type = types.attrs;
       };
     };
-
-    ghstack = {
-      enable = mkEnableOption "ghstack config for automata" // {
-        default = config.identities.ghstack.enable;
-      };
-
-      extraConfig = mkOption {
-        default = config.identities.ghstack.extraConfig;
-        description = ''
-          Extra ghstack config merged into the generated config.
-          The GitHub identity fields are fixed by the module and cannot be
-          overridden.
-        '';
-        type = types.attrs;
-      };
-    };
   };
 
   # yorha-automata is the GitHub login (automata was taken); the option and
@@ -89,7 +73,6 @@ in
         automata-username.sopsFile = ../../secrets/automata.enc.yaml;
         automata-email.sopsFile = ../../secrets/automata.enc.yaml;
         automata-name.sopsFile = ../../secrets/automata.enc.yaml;
-        automata-github-token.sopsFile = ../../secrets/automata.enc.yaml;
         automata-gpg-key.sopsFile = ../../secrets/automata.enc.yaml;
         automata-ssh-signing-key.sopsFile = ../../secrets/automata.enc.yaml;
       };
@@ -114,14 +97,6 @@ in
             extraConfig = cfg.automata.jj.extraConfig;
           }
         );
-
-        "automata-ghstack-config" = mkIf cfg.automata.ghstack.enable (
-          identities-lib.mkGhstackConfigTemplate {
-            username = config.sops.placeholder."automata-username";
-            token = config.sops.placeholder."automata-github-token";
-            extraConfig = cfg.automata.ghstack.extraConfig;
-          }
-        );
       };
     };
 
@@ -135,12 +110,6 @@ in
         }
       )
     ];
-
-    home.sessionVariables = mkIf cfg.automata.ghstack.enable {
-      GHSTACKRC_PATH =
-        config.lib.file.mkOutOfStoreSymlink
-          config.sops.templates."automata-ghstack-config".path;
-    };
 
     xdg.configFile."jj/conf.d/${toString cfg.automata.jj.priority}-automata.toml" =
       mkIf cfg.automata.jj.enable

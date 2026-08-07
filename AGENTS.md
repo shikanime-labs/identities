@@ -22,10 +22,9 @@ They only emit config fragments. The consumer is responsible for enabling
   - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`
 - **automata** — YoRHa operator identity (`yorha-automata` GitHub login).
   - Sops secrets: `automata-name`, `automata-email`, `automata-gpg-key`,
-    `automata-ssh-signing-key`, `automata-github-token`
+    `automata-ssh-signing-key`
   - Sops file: `secrets/automata.enc.yaml`
-  - Output: git includes (scoped via `git.condition`),
-    `jj/conf.d/automata.toml`, optional `GHSTACKRC_PATH` ghstack config
+  - Output: git includes (scoped via `git.condition`), `jj/conf.d/automata.toml`
 
 ## Usage
 
@@ -61,8 +60,6 @@ Inspired by Catppuccin/nix:
   `shikanime` ghstack and glab config
 - `identities.shikanime.ghstack.enable` / `.glab.enable` — per-tool output
   control for the `shikanime` ghstack and glab fragments
-- `identities.automata.ghstack.enable` — per-identity toggle for automata
-  ghstack config (consumes `automata-github-token`; mirrors `shikanime`)
 - `identities.<name>.git.extraConfig` — forwarded git config merged into the
   generated include; SSH signing fields are fixed by the module
 - `identities.<name>.git.condition` — optional include condition, such as
