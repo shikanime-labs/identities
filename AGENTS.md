@@ -11,18 +11,20 @@ They only emit config fragments. The consumer is responsible for enabling
 ## Identities
 
 - **shikanime** — Primary identity for Shikanime Studio work.
-  - Sops secrets: `shikanime-name`, `shikanime-email`, `shikanime-gpg-key`,
-    `shikanime-ssh-signing-key`
+  - Sops secrets: `name`, `email`, `gpg-key`, `ssh-signing-key`, `github-token`,
+    `gitlab-token`
   - Sops file: `secrets/shikanime.enc.yaml`
   - Output: git includes, `jj/conf.d/shikanime.toml`
 - **gouv** — Government identity.
-  - Sops secrets: `gouv-name`, `gouv-email`, `gouv-ssh-signing-key`
+  - Sops secrets: `name`, `email`, `gpg-key`, `ssh-signing-key`
   - Sops file: `secrets/gouv.enc.yaml`
   - Output: git includes (scoped via `git.condition`), `jj/conf.d/gouv.conf`
-- **automata** — YoRHa operator identity.
-  - Sops secrets: `automata-name`, `automata-email`, `automata-ssh-signing-key`
+- **automata** — YoRHa operator identity (`yorha-automata` GitHub login).
+  - Sops secrets: `name`, `email`, `gpg-key`, `ssh-signing-key`,
+    `automata-github-token`
   - Sops file: `secrets/automata.enc.yaml`
-  - Output: git includes (scoped via `git.condition`), `jj/conf.d/automata.toml`
+  - Output: git includes (scoped via `git.condition`),
+    `jj/conf.d/automata.toml`, optional `GHSTACKRC_PATH` ghstack config
 
 ## Usage
 
@@ -58,6 +60,8 @@ Inspired by Catppuccin/nix:
   `shikanime` ghstack and glab config
 - `identities.shikanime.ghstack.enable` / `.glab.enable` — per-tool output
   control for the `shikanime` ghstack and glab fragments
+- `identities.automata.ghstack.enable` — per-identity toggle for automata
+  ghstack config (consumes `automata-github-token`; mirrors `shikanime`)
 - `identities.<name>.git.extraConfig` — forwarded git config merged into the
   generated include; SSH signing fields are fixed by the module
 - `identities.<name>.git.condition` — optional include condition, such as
@@ -76,12 +80,13 @@ Inspired by Catppuccin/nix:
 ## File Structure
 
 ```text
-modules/
+modules/home/
 ├── default.nix        # Aggregator — imports all identities
-├── identities.nix     # Top-level options (global toggle, git/jj)
-├── shikanime.nix      # Primary identity (sops + git + jj)
+├── identities.nix     # Top-level options (global toggle, git/jj/ghstack/glab)
+├── shikanime.nix      # Primary identity (sops + git + jj + ghstack + glab)
 ├── gouv.nix           # Government identity (sops + git + jj)
-└── automata.nix    # YoRHa operator identity (sops + git + jj)
+├── automata.nix       # YoRHa operator identity (sops + git + jj + ghstack)
+└── lib.nix            # sops template helpers (mkGitConfigTemplate, etc.)
 
 secrets/
 ├── shikanime.enc.yaml  # Sops-encrypted PII for shikanime

@@ -68,30 +68,30 @@ in
   config = mkIf (cfg.enable && cfg.gouv.enable) {
     sops = {
       secrets = {
-        gouv-username.sopsFile = ../../secrets/gouv.enc.yaml;
-        gouv-email.sopsFile = ../../secrets/gouv.enc.yaml;
-        gouv-name.sopsFile = ../../secrets/gouv.enc.yaml;
-        gouv-gpg-key.sopsFile = ../../secrets/gouv.enc.yaml;
-        gouv-ssh-signing-key.sopsFile = ../../secrets/gouv.enc.yaml;
+        username.sopsFile = ../../secrets/gouv.enc.yaml;
+        email.sopsFile = ../../secrets/gouv.enc.yaml;
+        name.sopsFile = ../../secrets/gouv.enc.yaml;
+        gpg-key.sopsFile = ../../secrets/gouv.enc.yaml;
+        ssh-signing-key.sopsFile = ../../secrets/gouv.enc.yaml;
       };
 
       templates = {
         gouv-git-config = mkIf cfg.gouv.git.enable (
           identities-lib.mkGitConfigTemplate {
-            email = config.sops.placeholder.gouv-email;
-            name = config.sops.placeholder.gouv-name;
-            username = config.sops.placeholder.gouv-username;
-            signingKey = config.sops.placeholder.gouv-ssh-signing-key;
+            email = config.sops.placeholder.email;
+            name = config.sops.placeholder.name;
+            username = config.sops.placeholder.username;
+            signingKey = config.sops.placeholder.ssh-signing-key;
             extraConfig = cfg.gouv.git.extraConfig;
           }
         );
 
         gouv-jj-config = mkIf cfg.gouv.jj.enable (
           identities-lib.mkJujutsuConfigTemplate {
-            name = config.sops.placeholder.gouv-name;
-            email = config.sops.placeholder.gouv-email;
-            username = config.sops.placeholder.gouv-username;
-            signingKey = config.sops.placeholder.gouv-ssh-signing-key;
+            name = config.sops.placeholder.name;
+            email = config.sops.placeholder.email;
+            username = config.sops.placeholder.username;
+            signingKey = config.sops.placeholder.ssh-signing-key;
             extraConfig = cfg.gouv.jj.extraConfig;
           }
         );
