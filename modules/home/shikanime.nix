@@ -100,8 +100,8 @@ in
   config = mkIf (cfg.enable && cfg.shikanime.enable) {
     sops = {
       secrets = {
-        github-token.sopsFile = ../../secrets/shikanime.enc.yaml;
-        gitlab-token.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-github-token.sopsFile = ../../secrets/shikanime.enc.yaml;
+        shikanime-gitlab-token.sopsFile = ../../secrets/shikanime.enc.yaml;
         shikanime-email.sopsFile = ../../secrets/shikanime.enc.yaml;
         shikanime-gpg-key.sopsFile = ../../secrets/shikanime.enc.yaml;
         shikanime-name.sopsFile = ../../secrets/shikanime.enc.yaml;
@@ -133,7 +133,7 @@ in
         ghstack-config = mkIf cfg.shikanime.ghstack.enable (
           identities-lib.mkGhstackConfigTemplate {
             username = config.sops.placeholder.shikanime-username;
-            token = config.sops.placeholder.github-token;
+            token = config.sops.placeholder.shikanime-github-token;
             extraConfig = cfg.shikanime.ghstack.extraConfig;
           }
         );
@@ -141,7 +141,7 @@ in
         glab-cli-config = mkIf cfg.shikanime.glab.enable (
           identities-lib.mkGlabConfigTemplate {
             username = config.sops.placeholder.shikanime-username;
-            token = config.sops.placeholder.gitlab-token;
+            token = config.sops.placeholder.shikanime-gitlab-token;
             extraConfig = cfg.shikanime.glab.extraConfig;
           }
         );

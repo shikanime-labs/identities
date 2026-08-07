@@ -12,7 +12,8 @@ They only emit config fragments. The consumer is responsible for enabling
 
 - **shikanime** — Primary identity for Shikanime Studio work.
   - Sops secrets: `shikanime-name`, `shikanime-email`, `shikanime-gpg-key`,
-    `shikanime-ssh-signing-key`, `github-token`, `gitlab-token`
+    `shikanime-ssh-signing-key`, `shikanime-github-token`,
+    `shikanime-gitlab-token`
   - Sops file: `secrets/shikanime.enc.yaml`
   - Output: git includes, `jj/conf.d/shikanime.toml`
 - **gouv** — Government identity.
