@@ -90,6 +90,9 @@ Secrets are encrypted with age key
 
 - Nix files: 2-space indentation, `with lib;` at top.
 - Commit messages: plain-text capitalized title, no conventional-commit prefix.
+- Nix: dotted assignment (`a.b.c = v;`) for a single leaf under a shared
+  parent key; a record literal once two or more keys share the parent, keys
+  sorted
 - Run `nix fmt` before shipping.
 
 ## Stack Workflow
