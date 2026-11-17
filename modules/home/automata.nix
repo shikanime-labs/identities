@@ -83,7 +83,7 @@ in
             name = config.sops.placeholder."automata-name";
             email = config.sops.placeholder."automata-email";
             username = config.sops.placeholder."automata-username";
-            signingKey = config.sops.placeholder."automata-ssh-signing-key";
+            signingKey = config.sops.secrets."automata-ssh-signing-key".path;
             extraConfig = cfg.automata.git.extraConfig;
           }
         );
@@ -93,7 +93,7 @@ in
             name = config.sops.placeholder."automata-name";
             email = config.sops.placeholder."automata-email";
             username = config.sops.placeholder."automata-username";
-            signingKey = config.sops.placeholder."automata-ssh-signing-key";
+            signingKey = config.sops.secrets."automata-ssh-signing-key".path;
             extraConfig = cfg.automata.jj.extraConfig;
           }
         );
