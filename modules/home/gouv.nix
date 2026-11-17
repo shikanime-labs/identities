@@ -101,7 +101,7 @@ in
             email = config.sops.placeholder.gouv-email;
             name = config.sops.placeholder.gouv-name;
             username = config.sops.placeholder.gouv-username;
-            signingKey = config.sops.placeholder.gouv-ssh-signing-key;
+            signingKey = config.sops.secrets."gouv-ssh-signing-key".path;
             extraConfig = cfg.gouv.git.extraConfig;
           }
         );
@@ -111,7 +111,7 @@ in
             name = config.sops.placeholder.gouv-name;
             email = config.sops.placeholder.gouv-email;
             username = config.sops.placeholder.gouv-username;
-            signingKey = config.sops.placeholder.gouv-ssh-signing-key;
+            signingKey = config.sops.secrets."gouv-ssh-signing-key".path;
             extraConfig = cfg.gouv.jj.extraConfig;
           }
         );
