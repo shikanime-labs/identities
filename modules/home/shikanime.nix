@@ -115,7 +115,7 @@ in
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
             username = config.sops.placeholder.shikanime-username;
-            signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
+            signingKey = config.sops.secrets."shikanime-ssh-signing-key".path;
             extraConfig = cfg.shikanime.git.extraConfig;
           }
         );
@@ -125,7 +125,7 @@ in
             name = config.sops.placeholder.shikanime-name;
             email = config.sops.placeholder.shikanime-email;
             username = config.sops.placeholder.shikanime-username;
-            signingKey = config.sops.placeholder.shikanime-ssh-signing-key;
+            signingKey = config.sops.secrets."shikanime-ssh-signing-key".path;
             extraConfig = cfg.shikanime.jj.extraConfig;
           }
         );
